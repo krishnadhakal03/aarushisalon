@@ -1,0 +1,311 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block title %}Aarushi Salon - Best Beauty Service{% endblock %}
+
+{% block content %}
+<!-- Hero Start -->
+<div class="container-fluid p-0 hero-header bg-light mb-5">
+    <div class="container p-0">
+        <div class="row g-0 align-items-center">
+            <div class="col-lg-6 hero-header-text py-5">
+                <div class="py-5 px-3 ps-lg-0">
+                    <h1 class="font-dancing-script text-primary animated slideInLeft">Welcome</h1>
+                    <h1 class="display-1 mb-4 animated slideInLeft">Best Beauty Service</h1>
+                    <div class="row g-4 animated slideInLeft">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="btn-square btn btn-primary flex-shrink-0">
+                                    <i class="fa fa-phone text-dark"></i>
+                                </div>
+                                <div class="px-3">
+                                    <h5 class="text-primary mb-0">Call Us</h5>
+                                    {% if contact_info %}
+                                    <p class="fs-5 text-dark mb-0">{{ contact_info.phone }}</p>
+                                    {% else %}
+                                    <p class="fs-5 text-dark mb-0">+123456789</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="btn-square btn btn-primary flex-shrink-0">
+                                    <i class="fa fa-envelope text-dark"></i>
+                                </div>
+                                <div class="px-3">
+                                    <h5 class="text-primary mb-0">Mail Us</h5>
+                                    {% if contact_info %}
+                                    <p class="fs-5 text-dark mb-0">{{ contact_info.email }}</p>
+                                    {% else %}
+                                    <p class="fs-5 text-dark mb-0">info@aarushisalon.com</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="owl-carousel header-carousel animated fadeIn">
+                    <img class="img-fluid" src="{% static 'img/hero-slider-1.jpg' %}" alt="Aarushi Salon">
+                    <img class="img-fluid" src="{% static 'img/hero-slider-2.jpg' %}" alt="Beauty Services">
+                    <img class="img-fluid" src="{% static 'img/hero-slider-3.jpg' %}" alt="Professional Care">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+
+<!-- About Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.2s">
+                <img class="img-fluid mb-3" src="{% static 'img/about.jpg' %}" alt="About Aarushi Salon">
+                <div class="d-flex align-items-center bg-light">
+                    <div class="btn-square flex-shrink-0 bg-primary" style="width: 100px; height: 100px;">
+                        <i class="fa fa-phone fa-2x text-dark"></i>
+                    </div>
+                    <div class="px-3">
+                        {% if contact_info %}
+                        <h3>{{ contact_info.phone }}</h3>
+                        {% else %}
+                        <h3>+0123456789</h3>
+                        {% endif %}
+                        <span>Call us direct 24/7 for get a free consultation</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                <h1 class="font-dancing-script text-primary">About Us</h1>
+                <h1 class="mb-5">Why People Choose Us!</h1>
+                {% if site_content.about_content %}
+                <p class="mb-4">{{ site_content.about_content.content }}</p>
+                {% else %}
+                <p class="mb-4">With over ten years experience in the industry, our certified therapists are dedicated to providing you with the highest level of service, with each treatment and package fully customized and tailored to your personal needs.</p>
+                {% endif %}
+                <div class="row g-3 mb-5">
+                    <div class="col-sm-6">
+                        <div class="bg-light text-center p-4">
+                            <i class="fas fa-calendar-alt fa-4x text-primary"></i>
+                            <h1 class="display-5" data-toggle="counter-up">
+                                {% if site_content.experience_years %}{{ site_content.experience_years.content }}{% else %}10{% endif %}
+                            </h1>
+                            <p class="text-dark text-uppercase mb-0">Years experience</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="bg-light text-center p-4">
+                            <i class="fas fa-users fa-4x text-primary"></i>
+                            <h1 class="display-5" data-toggle="counter-up">
+                                {% if site_content.happy_customers %}{{ site_content.happy_customers.content }}{% else %}999{% endif %}
+                            </h1>
+                            <p class="text-dark text-uppercase mb-0">Happy Customers</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn-primary text-uppercase px-5 py-3" href="{% url 'salon:about' %}">Read More</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+
+<!-- Service Start -->
+<div class="container-fluid service py-5">
+    <div class="container">
+        <div class="text-center wow fadeIn" data-wow-delay="0.1s">
+            <h1 class="font-dancing-script text-primary">Our Services</h1>
+            <h1 class="mb-5">Explore Our Services</h1>
+        </div>
+        <div class="row g-4 g-md-0 text-center">
+            {% for service in featured_services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="service-item h-100 p-4 border-bottom border-end wow fadeIn" data-wow-delay="0.1s">
+                    {% if service.image %}
+                    <img class="img-fluid" src="{{ service.image.url }}" alt="{{ service.name }}">
+                    {% else %}
+                    <img class="img-fluid" src="{% static 'img/haircut.png' %}" alt="{{ service.name }}">
+                    {% endif %}
+                    <h3 class="mb-3">{{ service.name }}</h3>
+                    <p class="mb-3">{{ service.description|truncatewords:20 }}</p>
+                    <a class="btn btn-sm btn-primary text-uppercase" href="{% url 'salon:service_detail' service.id %}">Read More <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Service End -->
+
+<!-- Pricing Start -->
+<div class="container-fluid price px-0 py-5">
+    <div class="row g-0">
+        <div class="col-md-6">
+            <div class="d-flex align-items-center h-100 bg-primary p-5">
+                <div class="wow fadeIn" data-wow-delay="0.3s">
+                    <h1 class="font-dancing-script text-white">Pricing</h1>
+                    <h1 class="mb-0">Beauty Salon</h1>
+                    <h1 class="display-1 text-uppercase mb-5" style="letter-spacing: 10px;">Pricing</h1>
+                    <div class="row g-4 align-items-center">
+                        <div class="col-lg-6">
+                            <div class="text-center bg-dark p-5">
+                                <h4 class="text-white">Enjoy</h4>
+                                <h1 class="display-1 font-work-sans text-white">20%</h1>
+                                <p class="fs-2 text-white mb-0">Off</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <p>Book your appointment today and enjoy 20% off on all our premium services. Professional beauty treatments at affordable prices.</p>
+                            <a class="btn btn-dark" href="{% url 'salon:pricing' %}">View All Prices</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="h-100 bg-dark p-5">
+                {% for service in featured_services|slice:":6" %}
+                <div class="price-item mb-3 wow fadeIn" data-wow-delay="0.1s">
+                    {% if service.image %}
+                    <img class="img-fluid flex-shrink-0" src="{{ service.image.url }}" alt="{{ service.name }}">
+                    {% else %}
+                    <img class="img-fluid flex-shrink-0" src="{% static 'img/price-1.jpg' %}" alt="{{ service.name }}">
+                    {% endif %}
+                    <div class="text-end px-4">
+                        <h6 class="text-uppercase text-primary">{{ service.name }}</h6>
+                        <h3 class="text-white font-work-sans mb-0">${{ service.price }}</h3>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Pricing End -->
+
+<!-- Gallery Start -->
+<div class="container-fluid gallery py-5">
+    <div class="container">
+        <div class="text-center wow fadeIn" data-wow-delay="0.2s">
+            <h1 class="font-dancing-script text-primary">Gallery</h1>
+            <h1 class="mb-5">Explore Our Gallery</h1>
+        </div>
+        <div class="row g-0">
+            {% for image in gallery_images %}
+            <div class="col-md-6 wow fadeIn" data-wow-delay="0.2s">
+                <div class="gallery-item h-100">
+                    <img src="{{ image.image.url }}" class="img-fluid w-100 h-100" alt="{{ image.title }}">
+                    <div class="gallery-icon">
+                        <a href="{{ image.image.url }}" class="btn btn-primary btn-lg-square"
+                            data-lightbox="Gallery-{{ forloop.counter }}"><i class="fa fa-eye"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Gallery End -->
+
+<!-- Team Start -->
+<div class="container-fluid overflow-hidden py-5">
+    <div class="container">
+        <div class="text-center wow fadeIn" data-wow-delay="0.2s">
+            <h1 class="font-dancing-script text-primary">Team Members</h1>
+            <h1 class="mb-5">Our Experienced Specialists</h1>
+        </div>
+        <div class="row g-4 team">
+            {% for member in team_members %}
+            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
+                <div class="team-item position-relative overflow-hidden">
+                    {% if member.image %}
+                    <img class="img-fluid w-100" src="{{ member.image.url }}" alt="{{ member.name }}">
+                    {% else %}
+                    <img class="img-fluid w-100" src="{% static 'img/team-1.jpg' %}" alt="{{ member.name }}">
+                    {% endif %}
+                    <div class="team-overlay">
+                        <p class="text-primary mb-1">{{ member.position }}</p>
+                        <h4>{{ member.name }}</h4>
+                        <div class="d-flex justify-content-center">
+                            {% if member.facebook_url %}
+                            <a class="btn btn-dark btn-sm-square border-2 me-3" href="{{ member.facebook_url }}" target="_blank">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            {% endif %}
+                            {% if member.instagram_url %}
+                            <a class="btn btn-dark btn-sm-square border-2 me-3" href="{{ member.instagram_url }}" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            {% endif %}
+                            {% if member.linkedin_url %}
+                            <a class="btn btn-dark btn-sm-square border-2" href="{{ member.linkedin_url }}" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Team End -->
+
+<!-- Testimonial Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="text-center wow fadeIn" data-wow-delay="0.2s">
+            <h1 class="font-dancing-script text-primary">Testimonial</h1>
+            <h1 class="mb-5">What Clients Say!</h1>
+        </div>
+        <div class="owl-carousel testimonial-carousel wow fadeIn" data-wow-delay="0.3s">
+            {% for testimonial in testimonials %}
+            <div class="text-center bg-light p-4">
+                <i class="fa fa-quote-left fa-3x mb-3"></i>
+                <p>{{ testimonial.content }}</p>
+                {% if testimonial.image %}
+                <img class="img-fluid mx-auto border p-1 mb-3" src="{{ testimonial.image.url }}" alt="{{ testimonial.client_name }}">
+                {% else %}
+                <img class="img-fluid mx-auto border p-1 mb-3" src="{% static 'img/testimonial-1.jpg' %}" alt="{{ testimonial.client_name }}">
+                {% endif %}
+                <h4 class="mb-1">{{ testimonial.client_name }}</h4>
+                <span>{{ testimonial.profession }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Testimonial End -->
+
+<!-- Blog Start -->
+<div class="container-fluid blog p-0 mt-5">
+    <div class="row g-0">
+        {% for post in blog_posts %}
+        <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
+            <div class="h-100 d-flex flex-column justify-content-center bg-primary py-5 px-4">
+                <p class="mb-2"><i class="fa fa-calendar-alt text-dark me-1"></i>{{ post.created_at|date:"M d, Y" }} | <i class="fa fa-folder-open text-dark me-1"></i>{{ post.category }}</p>
+                <h3 class="mb-3">{{ post.title }}</h3>
+                <p>{{ post.excerpt|default:post.content|truncatewords:20 }}</p>
+                <a class="btn btn-dark align-self-start text-uppercase" href="{% url 'salon:blog_detail' post.slug %}">Read More <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+        {% if forloop.counter == 1 %}
+        <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
+            <div class="h-100">
+                {% if post.image %}
+                <img class="img-fluid w-100 h-100" src="{{ post.image.url }}" alt="{{ post.title }}" style="object-fit: cover;">
+                {% else %}
+                <img class="img-fluid w-100 h-100" src="{% static 'img/blog-1.jpg' %}" alt="{{ post.title }}" style="object-fit: cover;">
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<!-- Blog End -->
+{% endblock %}

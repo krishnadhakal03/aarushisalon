@@ -1,0 +1,166 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - Aarushi Salon{% endblock %}
+
+{% block content %}
+<!-- Hero Start -->
+<div class="container-fluid bg-light page-header py-5 mb-5">
+    <div class="container text-center py-5">
+        <h1 class="display-1 animated slideInLeft">Contact Us</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center animated slideInLeft mb-0">
+                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Contact</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Hero End -->
+
+<!-- Contact Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <h1 class="font-dancing-script text-primary">Get In Touch</h1>
+                <h1 class="mb-5">Contact Us</h1>
+                
+                {% if contact_info %}
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <div class="btn-square btn btn-primary flex-shrink-0">
+                                <i class="fa fa-phone text-dark"></i>
+                            </div>
+                            <div class="px-3">
+                                <h5 class="text-primary mb-0">Phone</h5>
+                                <p class="fs-5 text-dark mb-0">{{ contact_info.phone }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <div class="btn-square btn btn-primary flex-shrink-0">
+                                <i class="fa fa-envelope text-dark"></i>
+                            </div>
+                            <div class="px-3">
+                                <h5 class="text-primary mb-0">Email</h5>
+                                <p class="fs-5 text-dark mb-0">{{ contact_info.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center">
+                            <div class="btn-square btn btn-primary flex-shrink-0">
+                                <i class="fa fa-map-marker-alt text-dark"></i>
+                            </div>
+                            <div class="px-3">
+                                <h5 class="text-primary mb-0">Address</h5>
+                                <p class="fs-5 text-dark mb-0">{{ contact_info.address }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="bg-light text-center p-4">
+                            <i class="fas fa-clock fa-4x text-primary"></i>
+                            <h1 class="display-5">Mon - Sat</h1>
+                            <p class="text-dark text-uppercase mb-0">9:00 AM - 8:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="bg-light text-center p-4">
+                            <i class="fas fa-calendar-alt fa-4x text-primary"></i>
+                            <h1 class="display-5">Sunday</h1>
+                            <p class="text-dark text-uppercase mb-0">10:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="bg-light p-5">
+                    <h3 class="mb-4">Book Your Appointment</h3>
+                    <form id="appointmentForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="email" class="form-control" name="email" placeholder="Email" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="tel" class="form-control" name="phone" placeholder="Phone" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="service_id" required>
+                                    <option value="">Select Service</option>
+                                    {% for category in service_categories %}
+                                        {% for service in category.services.all %}
+                                        <option value="{{ service.id }}">{{ service.name }} - ${{ service.price }}</option>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="date" class="form-control" name="preferred_date" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="time" class="form-control" name="preferred_time" required>
+                            </div>
+                            <div class="col-12">
+                                <textarea class="form-control" name="message" rows="4" placeholder="Message (Optional)"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">Book Appointment</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Contact End -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    fetch('{% url "salon:book_appointment" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            this.reset();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+</script>
+{% endblock %}
