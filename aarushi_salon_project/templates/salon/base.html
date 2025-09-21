@@ -16,8 +16,8 @@
     
     <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{% if seo_settings and seo_settings.og_title %}{{ seo_settings.og_title }}{% else %}{% block title %}{% if seo_settings %}{{ seo_settings.page_title }}{% else %}Aarushi Salon - Best Beauty Service{% endif %}{% endblock %}{% endif %}">
-    <meta property="og:description" content="{% if seo_settings and seo_settings.og_description %}{{ seo_settings.og_description }}{% else %}{% block meta_description %}{% if seo_settings %}{{ seo_settings.meta_description }}{% else %}Professional beauty salon services including hair styling, makeup, skincare, massage, and more at Aarushi Salon{% endif %}{% endblock %}{% endif %}">
+    <meta property="og:title" content="{% if seo_settings and seo_settings.og_title %}{{ seo_settings.og_title }}{% else %}{% if seo_settings %}{{ seo_settings.page_title }}{% else %}Aarushi Salon - Best Beauty Service{% endif %}{% endif %}">
+    <meta property="og:description" content="{% if seo_settings and seo_settings.og_description %}{{ seo_settings.og_description }}{% else %}{% if seo_settings %}{{ seo_settings.meta_description }}{% else %}Professional beauty salon services including hair styling, makeup, skincare, massage, and more at Aarushi Salon{% endif %}{% endif %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     {% if seo_settings and seo_settings.og_image %}
     <meta property="og:image" content="{{ request.build_absolute_uri }}{{ seo_settings.og_image.url }}">
@@ -26,8 +26,8 @@
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% if seo_settings and seo_settings.twitter_title %}{{ seo_settings.twitter_title }}{% else %}{% block title %}{% if seo_settings %}{{ seo_settings.page_title }}{% else %}Aarushi Salon - Best Beauty Service{% endif %}{% endblock %}{% endif %}">
-    <meta name="twitter:description" content="{% if seo_settings and seo_settings.twitter_description %}{{ seo_settings.twitter_description }}{% else %}{% block meta_description %}{% if seo_settings %}{{ seo_settings.meta_description }}{% else %}Professional beauty salon services including hair styling, makeup, skincare, massage, and more at Aarushi Salon{% endif %}{% endblock %}{% endif %}">
+    <meta name="twitter:title" content="{% if seo_settings and seo_settings.twitter_title %}{{ seo_settings.twitter_title }}{% else %}{% if seo_settings %}{{ seo_settings.page_title }}{% else %}Aarushi Salon - Best Beauty Service{% endif %}{% endif %}">
+    <meta name="twitter:description" content="{% if seo_settings and seo_settings.twitter_description %}{{ seo_settings.twitter_description }}{% else %}{% if seo_settings %}{{ seo_settings.meta_description }}{% else %}Professional beauty salon services including hair styling, makeup, skincare, massage, and more at Aarushi Salon{% endif %}{% endif %}">
     {% if seo_settings and seo_settings.twitter_image %}
     <meta name="twitter:image" content="{{ request.build_absolute_uri }}{{ seo_settings.twitter_image.url }}">
     {% endif %}

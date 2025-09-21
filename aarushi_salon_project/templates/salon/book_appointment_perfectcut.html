@@ -47,7 +47,7 @@
                     <div class="alert-container">
                         {% for message in messages %}
                         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                            {{ message }}
+                            {{ message|safe }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                         {% endfor %}
@@ -56,75 +56,107 @@
                     
                     <form method="post" class="appointment-form">
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="first_name" class="form-label">First Name *</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        
+                        <!-- Personal Information -->
+                        <div class="form-section">
+                            <h5 class="section-title">Personal Information</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }} *</label>
+                                    {{ form.first_name }}
+                                    {% if form.first_name.errors %}
+                                        <div class="text-danger">{{ form.first_name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }} *</label>
+                                    {{ form.last_name }}
+                                    {% if form.last_name.errors %}
+                                        <div class="text-danger">{{ form.last_name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="last_name" class="form-label">Last Name *</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }} *</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="text-danger">{{ form.email.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.phone.id_for_label }}" class="form-label">{{ form.phone.label }} *</label>
+                                    {{ form.phone }}
+                                    {% if form.phone.errors %}
+                                        <div class="text-danger">{{ form.phone.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">Email Address *</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="phone" class="form-label">Phone Number *</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="service_id" class="form-label">Service *</label>
-                                <select class="form-control" id="service_id" name="service_id" required>
-                                    <option value="">Select a service</option>
+                        <!-- Service Selection -->
+                        <div class="form-section">
+                            <h5 class="section-title">Service & Scheduling</h5>
+                            
+                            <!-- Services Selection -->
+                            <div class="mb-4">
+                                <label class="form-label">{{ form.services.label }} *</label>
+                                <div class="services-multiselect">
                                     {% for service in services %}
-                                    <option value="{{ service.id }}">{{ service.name }} - ${{ service.price }}</option>
+                                        <div class="form-check service-option-compact">
+                                            <input type="checkbox" 
+                                                   class="form-check-input" 
+                                                   name="services" 
+                                                   value="{{ service.id }}" 
+                                                   id="id_services_{{ forloop.counter0 }}"
+                                                   {% if service.id in form.services.value %}checked{% endif %}>
+                                            <label class="form-check-label" for="id_services_{{ forloop.counter0 }}">
+                                                <span class="service-name">{{ service.name }}</span>
+                                                <span class="service-price">${{ service.price|floatformat:2 }}</span>
+                                                <small class="service-duration">{{ service.duration }}</small>
+                                            </label>
+                                        </div>
                                     {% endfor %}
-                                </select>
+                                </div>
+                                {% if form.services.errors %}
+                                    <div class="text-danger">{{ form.services.errors.0 }}</div>
+                                {% endif %}
                             </div>
+                            
+                            <!-- Date and Time Selection -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.appointment_date.id_for_label }}" class="form-label">{{ form.appointment_date.label }} *</label>
+                                    {{ form.appointment_date }}
+                                    {% if form.appointment_date.errors %}
+                                        <div class="text-danger">{{ form.appointment_date.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
                             <div class="col-md-6 mb-3">
-                                <label for="preferred_date" class="form-label">Preferred Date *</label>
-                                <input type="date" class="form-control" id="preferred_date" name="preferred_date" required>
+                                <label for="{{ form.appointment_time.id_for_label }}" class="form-label">{{ form.appointment_time.label }}</label>
+                                {{ form.appointment_time }}
+                                <small class="form-text text-muted">
+                                    <i class="fas fa-info-circle"></i> 
+                                    If no time slots are available, we will call you to schedule your appointment.
+                                </small>
+                                {% if form.appointment_time.errors %}
+                                    <div class="text-danger">{{ form.appointment_time.errors.0 }}</div>
+                                {% endif %}
+                            </div>
                             </div>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="preferred_time" class="form-label">Preferred Time *</label>
-                                <select class="form-control" id="preferred_time" name="preferred_time" required>
-                                    <option value="">Select time</option>
-                                    <option value="09:00">9:00 AM</option>
-                                    <option value="09:30">9:30 AM</option>
-                                    <option value="10:00">10:00 AM</option>
-                                    <option value="10:30">10:30 AM</option>
-                                    <option value="11:00">11:00 AM</option>
-                                    <option value="11:30">11:30 AM</option>
-                                    <option value="12:00">12:00 PM</option>
-                                    <option value="12:30">12:30 PM</option>
-                                    <option value="13:00">1:00 PM</option>
-                                    <option value="13:30">1:30 PM</option>
-                                    <option value="14:00">2:00 PM</option>
-                                    <option value="14:30">2:30 PM</option>
-                                    <option value="15:00">3:00 PM</option>
-                                    <option value="15:30">3:30 PM</option>
-                                    <option value="16:00">4:00 PM</option>
-                                    <option value="16:30">4:30 PM</option>
-                                    <option value="17:00">5:00 PM</option>
-                                    <option value="17:30">5:30 PM</option>
-                                    <option value="18:00">6:00 PM</option>
-                                </select>
+                        <!-- Additional Information -->
+                        <div class="form-section">
+                            <h5 class="section-title">Additional Information</h5>
+                            <div class="mb-3">
+                                <label for="{{ form.message.id_for_label }}" class="form-label">{{ form.message.label }}</label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                    <div class="text-danger">{{ form.message.errors.0 }}</div>
+                                {% endif %}
                             </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Additional Message</label>
-                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Any special requests or additional information..."></textarea>
                         </div>
                         
                         <div class="form-actions">
@@ -202,33 +234,164 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-// Set minimum date to today
-document.addEventListener('DOMContentLoaded', function() {
-    const dateInput = document.getElementById('preferred_date');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.setAttribute('min', today);
-    
-    // Form validation
-    const form = document.querySelector('.appointment-form');
-    form.addEventListener('submit', function(e) {
-        const requiredFields = form.querySelectorAll('[required]');
-        let isValid = true;
-        
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                field.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                field.classList.remove('is-invalid');
-            }
-        });
-        
-        if (!isValid) {
-            e.preventDefault();
-            alert('Please fill in all required fields.');
-        }
-    });
-});
-</script>
+<script src="{% static 'js/appointment-booking.js' %}"></script>
+<style>
+.form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color, #8b5a3c);
+}
+
+.section-title {
+    color: var(--primary-color, #8b5a3c);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.form-control:disabled {
+    background-color: #e9ecef;
+    opacity: 0.6;
+}
+
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--primary-color, #8b5a3c);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translateY(-50%) rotate(0deg); }
+    100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+.alert-container {
+    margin-bottom: 1.5rem;
+}
+
+#appointment-error {
+    margin-bottom: 1rem;
+}
+
+.services-multiselect {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.75rem;
+    background: #f8f9fa;
+}
+
+.service-option-compact {
+    margin: 0 0 0.5rem 0;
+    padding: 0;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background: white;
+    border: 1px solid #e9ecef;
+}
+
+.service-option-compact:last-child {
+    margin-bottom: 0;
+}
+
+.service-option-compact:hover {
+    background-color: rgba(139, 90, 60, 0.05);
+    border-color: var(--primary-color, #8b5a3c);
+}
+
+.service-option-compact input[type="checkbox"]:checked + label {
+    background-color: rgba(139, 90, 60, 0.1);
+    border-color: var(--primary-color, #8b5a3c);
+    font-weight: 600;
+}
+
+.service-option-compact input[type="checkbox"]:checked + label .service-name {
+    color: var(--primary-color, #8b5a3c);
+}
+
+.service-option-compact input[type="checkbox"]:checked + label .service-price {
+    color: var(--primary-color, #8b5a3c);
+    font-weight: bold;
+}
+
+.service-option-compact .form-check-input {
+    position: absolute;
+    opacity: 0;
+    margin: 0;
+}
+
+.service-option-compact .form-check-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin: 0;
+    position: relative;
+}
+
+.service-option-compact .form-check-label::before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    border: 2px solid #dee2e6;
+    border-radius: 4px;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.service-option-compact input[type="checkbox"]:checked + .form-check-label::before {
+    background-color: var(--primary-color, #8b5a3c);
+    border-color: var(--primary-color, #8b5a3c);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+    background-size: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.service-name {
+    flex: 1;
+    color: #333;
+    font-weight: 500;
+    margin-right: 1rem;
+    font-size: 0.95rem;
+}
+
+.service-price {
+    font-weight: 700;
+    color: var(--primary-color, #8b5a3c);
+    margin-right: 0.75rem;
+    min-width: 70px;
+    text-align: right;
+    font-size: 1rem;
+}
+
+.service-duration {
+    color: #666;
+    font-size: 0.85rem;
+    min-width: 60px;
+    text-align: right;
+    font-style: italic;
+}
+</style>
 {% endblock %}

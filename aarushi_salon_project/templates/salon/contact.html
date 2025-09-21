@@ -1,22 +1,37 @@
-{% extends 'salon/base.html' %}
+{% extends 'salon/base_perfectcut.html' %}
 {% load static %}
+{% load salon_extras %}
 
-{% block title %}Contact Us - Aarushi Salon{% endblock %}
+{% block title %}Contact Us - {{ site_settings.site_name|default:'Aarushi Salon' }}{% endblock %}
 
 {% block content %}
-<!-- Hero Start -->
-<div class="container-fluid bg-light page-header py-5 mb-5">
-    <div class="container text-center py-5">
-        <h1 class="display-1 animated slideInLeft">Contact Us</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center animated slideInLeft mb-0">
-                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:home' %}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Contact</li>
-            </ol>
-        </nav>
+<!-- Hero Section -->
+<section class="contact-hero-section" style="min-height: 40vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% static 'img/hero-bg.jpg' %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">Contact Us</h1>
+                    <p class="hero-subtitle">Get in touch with us for any questions or to book your appointment</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-phone"></i>
+                            <span>Call Us Anytime</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email Support</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Visit Our Salon</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<!-- Hero End -->
+</section>
 
 <!-- Contact Start -->
 <div class="container-fluid py-5">
@@ -84,43 +99,42 @@
             
             <div class="col-lg-6">
                 <div class="bg-light p-5">
-                    <h3 class="mb-4">Book Your Appointment</h3>
-                    <form id="appointmentForm">
+                    <h3 class="mb-4">Get In Touch</h3>
+                    <form id="contactForm">
                         {% csrf_token %}
                         <div class="row g-3">
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                            <div class="col-12">
+                                <input type="text" class="form-control" name="name" placeholder="Name" required>
                             </div>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                            <div class="col-12">
+                                <input type="tel" class="form-control" name="phone" placeholder="Phone (optional)">
                             </div>
-                            <div class="col-sm-6">
-                                <input type="email" class="form-control" name="email" placeholder="Email" required>
+                            <div class="col-12">
+                                <input type="email" class="form-control" name="email" placeholder="Email Address" required>
                             </div>
-                            <div class="col-sm-6">
-                                <input type="tel" class="form-control" name="phone" placeholder="Phone" required>
-                            </div>
-                            <div class="col-sm-6">
-                                <select class="form-control" name="service_id" required>
-                                    <option value="">Select Service</option>
-                                    {% for category in service_categories %}
-                                        {% for service in category.services.all %}
-                                        <option value="{{ service.id }}">{{ service.name }} - ${{ service.price }}</option>
-                                        {% endfor %}
-                                    {% endfor %}
+                            <div class="col-12">
+                                <select class="form-control" name="subject" required>
+                                    <option value="">Select</option>
+                                    <option value="Contact Details">Request- Contact Details</option>
+                                    <option value="Service Details">Request- Service Details</option>
+                                    <option value="Service Price">Request- Service Price</option>
+                                    <option value="Large Volume Service">Request- Large Volume Service</option>
+                                    <option value="Reservation Details">Request- Reservation Details</option>
+                                    <option value="Service/Cost">Complain- Service/Cost</option>
+                                    <option value="Reservation">Complain- Reservation</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6">
-                                <input type="date" class="form-control" name="preferred_date" required>
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="time" class="form-control" name="preferred_time" required>
+                            <div class="col-12">
+                                <textarea class="form-control" name="message" rows="4" placeholder="Message" required></textarea>
                             </div>
                             <div class="col-12">
-                                <textarea class="form-control" name="message" rows="4" placeholder="Message (Optional)"></textarea>
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="me-2">10 + 14 =</span>
+                                    <input type="number" class="form-control" style="width: 100px;" name="captcha" required>
+                                </div>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Book Appointment</button>
+                                <button class="btn btn-primary w-100 py-3" type="submit">SEND MESSAGE</button>
                             </div>
                         </div>
                     </form>
@@ -134,13 +148,26 @@
 
 {% block extra_js %}
 <script>
-document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
     
-    fetch('{% url "salon:book_appointment" %}', {
+    // Simple validation
+    if (!data.name || !data.email || !data.subject || !data.message) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Captcha validation
+    if (parseInt(data.captcha) !== 24) {
+        alert('Please solve the math problem correctly');
+        return;
+    }
+    
+    // Submit form
+    fetch('{% url "salon:contact" %}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -151,15 +178,15 @@ document.getElementById('appointmentForm').addEventListener('submit', function(e
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(data.message);
+            alert('Message sent successfully! We will get back to you soon.');
             this.reset();
         } else {
-            alert(data.message);
+            alert('Error: ' + (data.error || 'Please try again'));
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        alert('Error sending message. Please try again.');
     });
 });
 </script>

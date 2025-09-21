@@ -5,12 +5,14 @@ from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
+from datetime import datetime, timedelta
 import json
 
 from .models import (
     ServiceCategory, Service, TeamMember, Testimonial, 
-    GalleryImage, BlogPost, ContactInfo, Appointment, SiteContent
+    GalleryImage, BlogPost, ContactInfo, Appointment, SiteContent, ContactMessage
 )
+from .forms import AppointmentBookingForm
 from django.contrib import messages
 
 
@@ -321,6 +323,45 @@ def blog_detail(request, slug):
     return render(request, 'salon/blog_detail_perfectcut.html', context)
 
 
+def contact_simple(request):
+    """Simple contact page matching the real website"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            # Create contact message
+            contact_message = ContactMessage.objects.create(
+                name=data.get('name', ''),
+                email=data.get('email', ''),
+                phone=data.get('phone', ''),
+                subject=data.get('subject', ''),
+                message=data.get('message', ''),
+                status='new'
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Message sent successfully! We will get back to you soon.',
+                'message_id': contact_message.id
+            })
+            
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            })
+    
+    # Get contact info and service categories
+    contact_info = ContactInfo.objects.filter(is_active=True).first()
+    service_categories = ServiceCategory.objects.filter(is_active=True).prefetch_related('services')
+    
+    context = {
+        'contact_info': contact_info,
+        'service_categories': service_categories,
+    }
+    
+    return render(request, 'salon/contact_perfectcut.html', context)
+
 def contact(request):
     """Contact page view"""
     contact_info = ContactInfo.objects.filter(is_active=True).first()
@@ -334,33 +375,97 @@ def contact(request):
     return render(request, 'salon/contact_perfectcut.html', context)
 
 
-def book_appointment(request):
-    """Appointment booking page"""
+def book_appointment_simple(request):
+    """Simple appointment booking page matching the real website"""
     if request.method == 'POST':
         try:
+            data = json.loads(request.body)
+            
             # Create appointment
             appointment = Appointment.objects.create(
-                first_name=request.POST.get('first_name'),
-                last_name=request.POST.get('last_name'),
-                email=request.POST.get('email'),
-                phone=request.POST.get('phone'),
-                service_id=request.POST.get('service_id'),
-                preferred_date=request.POST.get('preferred_date'),
-                preferred_time=request.POST.get('preferred_time'),
-                message=request.POST.get('message', ''),
+                first_name=data.get('full_name', '').split(' ')[0] if data.get('full_name') else '',
+                last_name=' '.join(data.get('full_name', '').split(' ')[1:]) if data.get('full_name') and len(data.get('full_name', '').split(' ')) > 1 else '',
+                email=data.get('email', ''),
+                phone=data.get('phone', ''),
+                preferred_date=datetime.strptime(data.get('date'), '%Y-%m-%d').date() if data.get('date') else None,
+                preferred_time=datetime.strptime(data.get('time'), '%H:%M').time() if data.get('time') else None,
+                message=data.get('message', ''),
+                status='pending'
             )
             
-            messages.success(request, 'Appointment booked successfully! We will contact you soon.')
-            return redirect('salon:book_appointment')
+            return JsonResponse({
+                'success': True,
+                'message': 'Appointment request submitted successfully!',
+                'booking_reference': appointment.booking_reference
+            })
             
         except Exception as e:
-            messages.error(request, f'Error booking appointment: {str(e)}')
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            })
+    
+    return render(request, 'salon/book_appointment_perfectcut_new.html')
+
+def book_appointment(request):
+    """Appointment booking page with dynamic slot selection"""
+    if request.method == 'POST':
+        form = AppointmentBookingForm(request.POST)
+        if form.is_valid():
+            try:
+                appointment = form.save()
+                
+                # Get selected services for the success message
+                selected_services = appointment.services.all()
+                service_names = [service.service.name for service in selected_services]
+                total_price = appointment.total_price
+                total_duration = appointment.total_duration
+                
+                # Create detailed success message
+                time_info = ""
+                if appointment.preferred_time:
+                    time_info = f" at {appointment.preferred_time.strftime('%I:%M %p')}"
+                else:
+                    time_info = " (Time to be confirmed by phone call)"
+                
+                success_message = f"""
+                <div class="alert alert-success">
+                    <h4><i class="fas fa-check-circle"></i> Appointment Request Submitted Successfully!</h4>
+                    <p><strong>Booking Reference:</strong> {appointment.booking_reference}</p>
+                    <p><strong>Customer:</strong> {appointment.full_name}</p>
+                    <p><strong>Date & Time:</strong> {appointment.preferred_date.strftime('%A, %B %d, %Y')}{time_info}</p>
+                    <p><strong>Services:</strong> {', '.join(service_names)}</p>
+                    <p><strong>Total Duration:</strong> {total_duration} minutes</p>
+                    <p><strong>Total Price:</strong> ${total_price:.2f}</p>
+                    <p><strong>Status:</strong> {appointment.get_status_display()}</p>
+                    <hr>
+                    <p class="mb-0">
+                        <i class="fas fa-phone"></i> 
+                        We will call you within 24 hours to confirm your appointment time. 
+                        Thank you for choosing Aarushi Salon!
+                    </p>
+                </div>
+                """
+                
+                messages.success(request, success_message)
+                return redirect('salon:book_appointment')
+            except Exception as e:
+                messages.error(request, f'Error booking appointment: {str(e)}')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = AppointmentBookingForm()
     
     # Get services for the form
     services = Service.objects.filter(is_active=True)
     contact_info = ContactInfo.objects.filter(is_active=True).first()
     
+    # Debug: Print form choices
+    print("Date choices:", form.fields['appointment_date'].widget.choices)
+    print("Services count:", services.count())
+    
     context = {
+        'form': form,
         'services': services,
         'contact_info': contact_info,
     }

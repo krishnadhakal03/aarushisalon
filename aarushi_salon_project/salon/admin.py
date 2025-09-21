@@ -7,7 +7,8 @@ from .models import (
     ServiceCategory, Service, TeamMember, Testimonial, CustomerFeedback,
     GalleryImage, BlogPost, BlogComment, ContactInfo, Appointment,
     SiteContent, ThemeSettings, SiteImages, ServiceIcons, SiteSettings,
-    SEOSettings, GoogleAnalytics, SEOPageContent
+    SEOSettings, GoogleAnalytics, SEOPageContent, BusinessHours, AppointmentSlot,
+    AppointmentService, ContactMessage
 )
 
 
@@ -108,15 +109,6 @@ class ContactInfoAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
 
 
-@admin.register(Appointment, site=admin_site)
-class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'service', 'preferred_date', 'preferred_time', 'status', 'created_at']
-    list_filter = ['status', 'preferred_date', 'created_at']
-    search_fields = ['first_name', 'last_name', 'email', 'phone', 'service__name']
-    list_editable = ['status']
-    ordering = ['-created_at']
-    readonly_fields = ['created_at', 'updated_at']
-    raw_id_fields = ['service']
 
 
 @admin.register(SiteContent, site=admin_site)
@@ -271,6 +263,127 @@ class SEOPageContentAdmin(admin.ModelAdmin):
         }),
         ('Image SEO', {
             'fields': ('image_alt_text',)
+        }),
+    )
+
+
+@admin.register(BusinessHours, site=admin_site)
+class BusinessHoursAdmin(admin.ModelAdmin):
+    list_display = ['day_of_week', 'is_open', 'open_time', 'close_time', 'is_active', 'updated_at']
+    list_filter = ['is_open', 'is_active', 'day_of_week']
+    search_fields = ['day_of_week']
+    list_editable = ['is_open', 'open_time', 'close_time', 'is_active']
+    ordering = ['day_of_week']
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Day Configuration', {
+            'fields': ('day_of_week', 'is_open', 'is_active')
+        }),
+        ('Hours', {
+            'fields': ('open_time', 'close_time')
+        }),
+    )
+
+
+@admin.register(AppointmentSlot, site=admin_site)
+class AppointmentSlotAdmin(admin.ModelAdmin):
+    list_display = ['date', 'start_time', 'end_time', 'service', 'is_available', 'is_booked', 'appointment', 'created_at']
+    list_filter = ['date', 'is_available', 'is_booked', 'service__category', 'service', 'created_at']
+    search_fields = ['service__name', 'appointment__first_name', 'appointment__last_name']
+    list_editable = ['is_available']
+    ordering = ['date', 'start_time']
+    readonly_fields = ['created_at', 'updated_at']
+    raw_id_fields = ['service', 'appointment']
+    date_hierarchy = 'date'
+    fieldsets = (
+        ('Slot Information', {
+            'fields': ('date', 'start_time', 'end_time', 'service')
+        }),
+        ('Availability', {
+            'fields': ('is_available', 'is_booked')
+        }),
+        ('Booking', {
+            'fields': ('appointment',)
+        }),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('service', 'appointment')
+
+
+@admin.register(Appointment, site=admin_site)
+class AppointmentAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'get_services', 'preferred_date', 'preferred_time', 'status', 'booking_reference', 'total_price', 'created_at']
+    list_filter = ['status', 'preferred_date', 'created_at']
+    search_fields = ['first_name', 'last_name', 'email', 'phone', 'booking_reference']
+    list_editable = ['status']
+    ordering = ['-created_at']
+    readonly_fields = ['booking_reference', 'total_duration', 'total_price', 'created_at', 'updated_at']
+    raw_id_fields = ['appointment_slot']
+    date_hierarchy = 'preferred_date'
+    fieldsets = (
+        ('Customer Information', {
+            'fields': ('first_name', 'last_name', 'email', 'phone')
+        }),
+        ('Appointment Details', {
+            'fields': ('preferred_date', 'preferred_time', 'appointment_slot')
+        }),
+        ('Status & Reference', {
+            'fields': ('status', 'booking_reference')
+        }),
+        ('Pricing & Duration', {
+            'fields': ('total_duration', 'total_price')
+        }),
+        ('Additional Information', {
+            'fields': ('message',)
+        }),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('services__service').select_related('appointment_slot')
+
+    def get_services(self, obj):
+        """Display services for this appointment"""
+        services = obj.services.all()
+        if services.exists():
+            return ", ".join([service.service.name for service in services])
+        return "No services"
+    get_services.short_description = "Services"
+
+
+@admin.register(AppointmentService, site=admin_site)
+class AppointmentServiceAdmin(admin.ModelAdmin):
+    list_display = ['appointment', 'service', 'service_price', 'created_at']
+    list_filter = ['service__category', 'created_at']
+    search_fields = ['appointment__first_name', 'appointment__last_name', 'service__name']
+    ordering = ['-created_at']
+    readonly_fields = ['created_at']
+    raw_id_fields = ['appointment', 'service']
+
+    def service_price(self, obj):
+        return f"${obj.service.price}"
+    service_price.short_description = "Price"
+
+
+@admin.register(ContactMessage, site=admin_site)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email', 'subject', 'status', 'created_at']
+    list_filter = ['status', 'created_at', 'subject']
+    search_fields = ['name', 'email', 'subject', 'message']
+    list_editable = ['status']
+    ordering = ['-created_at']
+    readonly_fields = ['created_at', 'updated_at']
+    date_hierarchy = 'created_at'
+    
+    fieldsets = (
+        ('Contact Information', {
+            'fields': ('name', 'email', 'phone')
+        }),
+        ('Message Details', {
+            'fields': ('subject', 'message')
+        }),
+        ('Status & Timestamps', {
+            'fields': ('status', 'created_at', 'updated_at')
         }),
     )
 

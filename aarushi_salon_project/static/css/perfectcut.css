@@ -2785,3 +2785,195 @@ p {
         font-size: 0.9rem;
     }
 }
+
+/* Contact & Appointment Form Styles */
+.contact-form-card,
+.appointment-form-card {
+    background: var(--bg-white);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-light);
+    margin-bottom: 30px;
+}
+
+.contact-form-card .form-label,
+.appointment-form-card .form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.contact-form-card .form-control,
+.appointment-form-card .form-control {
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+    transition: var(--transition-fast);
+    background: var(--bg-white);
+}
+
+.contact-form-card .form-control:focus,
+.appointment-form-card .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 90, 60, 0.1);
+    outline: none;
+}
+
+.contact-info-card {
+    background: var(--bg-white);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    transition: var(--transition-normal);
+    height: 100%;
+}
+
+.contact-info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.contact-info-card .contact-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 24px;
+}
+
+.contact-info-card h5 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-family: var(--font-heading);
+}
+
+.contact-info-card p {
+    color: var(--text-medium);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.business-hours-card {
+    background: var(--bg-white);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+}
+
+.hours-item {
+    padding: 8px 0;
+    color: var(--text-medium);
+    font-size: 16px;
+}
+
+.hours-item strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Hero Section Styles */
+.contact-hero-section,
+.appointment-hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    z-index: 2;
+    position: relative;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-family: var(--font-heading);
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.hero-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.feature-item i {
+    font-size: 20px;
+    color: var(--secondary-color);
+}
+
+/* Section Styles */
+.contact-section,
+.appointment-section {
+    background: var(--bg-cream);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-family: var(--font-heading);
+}
+
+.section-title p {
+    font-size: 1.1rem;
+    color: var(--text-medium);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Button Styles */
+.btn-primary {
+    background: var(--bg-gradient);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 30px;
+    transition: var(--transition-normal);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+}

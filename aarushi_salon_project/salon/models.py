@@ -23,6 +23,7 @@ class Service(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     duration = models.CharField(max_length=50, blank=True)  # e.g., "60 minutes"
+    duration_minutes = models.IntegerField(default=60, help_text="Duration in minutes for scheduling")
     image = models.ImageField(upload_to='services/', blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -211,11 +212,16 @@ class Appointment(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    # Remove single service field - now handled by AppointmentService
     preferred_date = models.DateField()
     preferred_time = models.TimeField()
     message = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    # New fields for slot-based booking
+    appointment_slot = models.ForeignKey('AppointmentSlot', on_delete=models.SET_NULL, null=True, blank=True, related_name='booked_appointment')
+    booking_reference = models.CharField(max_length=20, unique=True, blank=True, help_text="Unique booking reference")
+    total_duration = models.IntegerField(default=0, help_text="Total duration in minutes")
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, help_text="Total price for all services")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -223,7 +229,78 @@ class Appointment(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.service.name}"
+        services = self.services.all()
+        if services.exists():
+            service_names = ", ".join([s.service.name for s in services])
+            return f"{self.first_name} {self.last_name} - {service_names} on {self.preferred_date}"
+        return f"{self.first_name} {self.last_name} - Appointment on {self.preferred_date}"
+
+    def save(self, *args, **kwargs):
+        """Override save to generate booking reference and handle slot booking"""
+        if not self.booking_reference:
+            import uuid
+            self.booking_reference = str(uuid.uuid4())[:8].upper()
+        
+        # If appointment is confirmed and has a slot, mark slot as booked
+        if self.status == 'confirmed' and self.appointment_slot:
+            self.appointment_slot.is_booked = True
+            self.appointment_slot.save()
+        
+        super().save(*args, **kwargs)
+
+    def cancel_appointment(self):
+        """Cancel appointment and free up the slot"""
+        if self.appointment_slot:
+            self.appointment_slot.is_booked = False
+            self.appointment_slot.save()
+        self.status = 'cancelled'
+        self.save()
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    @property
+    def appointment_datetime(self):
+        """Return the appointment datetime"""
+        from django.utils import timezone
+        return timezone.datetime.combine(self.preferred_date, self.preferred_time)
+
+    def calculate_totals(self):
+        """Calculate total duration and price for all services"""
+        services = self.services.all()
+        total_duration = sum(service.service.duration_minutes for service in services)
+        total_price = sum(service.service.price for service in services)
+        
+        self.total_duration = total_duration
+        self.total_price = total_price
+        self.save(update_fields=['total_duration', 'total_price'])
+
+
+class AppointmentService(models.Model):
+    """Services selected for an appointment"""
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='services')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['appointment', 'service']
+        verbose_name = "Appointment Service"
+        verbose_name_plural = "Appointment Services"
+
+    def __str__(self):
+        return f"{self.appointment.full_name} - {self.service.name}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Recalculate totals when a service is added
+        self.appointment.calculate_totals()
+
+    def delete(self, *args, **kwargs):
+        appointment = self.appointment
+        super().delete(*args, **kwargs)
+        # Recalculate totals when a service is removed
+        appointment.calculate_totals()
 
 
 class SiteContent(models.Model):
@@ -451,3 +528,100 @@ class SEOPageContent(models.Model):
 
     def __str__(self):
         return f"{self.get_page_type_display()} - {self.content_section}"
+
+
+class BusinessHours(models.Model):
+    """Business hours configuration for different days"""
+    DAY_CHOICES = [
+        ('monday', 'Monday'),
+        ('tuesday', 'Tuesday'),
+        ('wednesday', 'Wednesday'),
+        ('thursday', 'Thursday'),
+        ('friday', 'Friday'),
+        ('saturday', 'Saturday'),
+        ('sunday', 'Sunday'),
+    ]
+    
+    day_of_week = models.CharField(max_length=10, choices=DAY_CHOICES, unique=True)
+    is_open = models.BooleanField(default=True)
+    open_time = models.TimeField(help_text="Opening time (e.g., 10:00)")
+    close_time = models.TimeField(help_text="Closing time (e.g., 19:00)")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Business Hours"
+        verbose_name_plural = "Business Hours"
+        ordering = ['day_of_week']
+
+    def __str__(self):
+        status = "Open" if self.is_open else "Closed"
+        return f"{self.get_day_of_week_display()} - {status} ({self.open_time} - {self.close_time})"
+
+
+class AppointmentSlot(models.Model):
+    """Available appointment time slots"""
+    date = models.DateField(help_text="Date of the appointment slot")
+    start_time = models.TimeField(help_text="Start time of the slot")
+    end_time = models.TimeField(help_text="End time of the slot")
+    is_available = models.BooleanField(default=True)
+    is_booked = models.BooleanField(default=False)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='appointment_slots')
+    appointment = models.ForeignKey('Appointment', on_delete=models.SET_NULL, null=True, blank=True, related_name='booked_slot')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Appointment Slot"
+        verbose_name_plural = "Appointment Slots"
+        unique_together = ['date', 'start_time', 'service']
+        ordering = ['date', 'start_time']
+
+    def __str__(self):
+        status = "Booked" if self.is_booked else "Available"
+        return f"{self.date} {self.start_time} - {self.end_time} ({self.service.name}) - {status}"
+
+    @property
+    def is_available_for_booking(self):
+        """Check if slot is available for booking"""
+        return self.is_available and not self.is_booked
+
+    @property
+    def datetime_start(self):
+        """Return datetime object for start time"""
+        from django.utils import timezone
+        return timezone.datetime.combine(self.date, self.start_time)
+
+    @property
+    def datetime_end(self):
+        """Return datetime object for end time"""
+        from django.utils import timezone
+        return timezone.datetime.combine(self.date, self.end_time)
+
+
+class ContactMessage(models.Model):
+    """Model to store contact form messages"""
+    STATUS_CHOICES = [
+        ('new', 'New'),
+        ('read', 'Read'),
+        ('replied', 'Replied'),
+        ('closed', 'Closed'),
+    ]
+    
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True)
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Contact Message"
+        verbose_name_plural = "Contact Messages"
+    
+    def __str__(self):
+        return f"{self.name} - {self.subject} ({self.created_at.strftime('%Y-%m-%d')})"

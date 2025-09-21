@@ -1,0 +1,211 @@
+{% extends 'salon/base_perfectcut.html' %}
+{% load static %}
+{% load salon_extras %}
+
+{% block title %}Schedule Appointment - {{ site_settings.site_name|default:'Aarushi Salon' }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="appointment-hero-section" style="min-height: 40vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% static 'img/hero-bg.jpg' %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">Schedule Appointment</h1>
+                    <p class="hero-subtitle">Book your beauty service appointment with us</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Easy Booking</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Flexible Times</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-star"></i>
+                            <span>Quality Service</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Appointment Section -->
+<section class="appointment-section py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Book Your Appointment</h2>
+            <p>Please fill out the Appointment form below. We will get ready to welcome you.</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="appointment-form-card">
+                    <form method="post" id="appointmentForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" name="full_name" placeholder="Your Full Name" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Service Category *</label>
+                                <select class="form-control" name="service_category" required>
+                                    <option value="">Service Category</option>
+                                    <option value="Skin Care">Skin Care</option>
+                                    <option value="Waxing">Waxing</option>
+                                    <option value="Threading">Threading</option>
+                                    <option value="Hair Styling">Hair Styling</option>
+                                    <option value="Color">Color</option>
+                                    <option value="Herbal Bleach">Herbal Bleach</option>
+                                    <option value="Body Scrub">Body Scrub</option>
+                                    <option value="Henna Design">Henna Design</option>
+                                    <option value="Make Up">Make Up</option>
+                                    <option value="Bridal Package">Bridal Package</option>
+                                    <option value="Massage">Massage</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Date *</label>
+                                <input type="date" class="form-control" name="date" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Time *</label>
+                                <input type="time" class="form-control" name="time" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Phone *</label>
+                                <input type="tel" class="form-control" name="phone" placeholder="Phone Number" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" name="email" placeholder="Email Address" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control" name="message" rows="4" placeholder="Any special requests or notes..."></textarea>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="me-3">3 + 4 =</span>
+                                    <input type="number" class="form-control" style="width: 100px;" name="captcha" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">
+                                    <i class="fas fa-calendar-check me-2"></i>Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Business Hours -->
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="business-hours-card">
+                    <h4 class="text-center mb-4">Our Business Hours</h4>
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <div class="hours-item">
+                                <strong>Tuesday:</strong> 10am – 7pm
+                            </div>
+                            <div class="hours-item">
+                                <strong>Wednesday:</strong> 10am – 7pm
+                            </div>
+                            <div class="hours-item">
+                                <strong>Thursday:</strong> 10am – 7pm
+                            </div>
+                            <div class="hours-item">
+                                <strong>Friday:</strong> 10am – 7pm
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="hours-item">
+                                <strong>Saturday:</strong> 10am – 7pm
+                            </div>
+                            <div class="hours-item">
+                                <strong>Sunday:</strong> 11am – 5pm
+                            </div>
+                            <div class="hours-item">
+                                <strong>Monday:</strong> CLOSED
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="contact-info-card">
+                    <h5 class="text-primary">AARUSHI SALON</h5>
+                    <p><strong>1627 SARDIS RD N -4C</strong></p>
+                    <p>CHARLOTTE, NC 28270</p>
+                    <p><a href="#" class="text-primary">GET DIRECTION</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Simple validation
+    if (!data.full_name || !data.service_category || !data.date || !data.time || !data.phone || !data.email) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Captcha validation
+    if (parseInt(data.captcha) !== 7) {
+        alert('Please solve the math problem correctly');
+        return;
+    }
+    
+    // Submit form
+    fetch('{% url "salon:book_appointment" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Appointment request submitted successfully! We will call you to confirm.');
+            this.reset();
+        } else {
+            alert('Error: ' + (data.error || 'Please try again'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error submitting appointment. Please try again.');
+    });
+});
+</script>
+{% endblock %}

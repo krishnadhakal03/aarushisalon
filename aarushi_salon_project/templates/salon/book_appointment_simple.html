@@ -1,0 +1,177 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block title %}Schedule Appointment - Aarushi Salon{% endblock %}
+
+{% block content %}
+<!-- Hero Start -->
+<div class="container-fluid bg-light page-header py-5 mb-5">
+    <div class="container text-center py-5">
+        <h1 class="display-1 animated slideInLeft">Schedule Appointment</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center animated slideInLeft mb-0">
+                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Appointment</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Hero End -->
+
+<!-- Appointment Form Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="bg-light p-5 rounded">
+                    <h2 class="text-center mb-4">Schedule Your Appointment</h2>
+                    <p class="text-center mb-4">Please fill out the Appointment form below. We will get ready to welcome you.</p>
+                    
+                    <form method="post" id="appointmentForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" name="full_name" placeholder="Full Name" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Service Category *</label>
+                                <select class="form-control" name="service_category" required>
+                                    <option value="">Service Category</option>
+                                    <option value="Skin Care">Skin Care</option>
+                                    <option value="Waxing">Waxing</option>
+                                    <option value="Threading">Threading</option>
+                                    <option value="Hair Styling">Hair Styling</option>
+                                    <option value="Color">Color</option>
+                                    <option value="Herbal Bleach">Herbal Bleach</option>
+                                    <option value="Body Scrub">Body Scrub</option>
+                                    <option value="Henna Design">Henna Design</option>
+                                    <option value="Make Up">Make Up</option>
+                                    <option value="Bridal Package">Bridal Package</option>
+                                    <option value="Massage">Massage</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Date *</label>
+                                <input type="date" class="form-control" name="date" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Time *</label>
+                                <input type="time" class="form-control" name="time" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Phone *</label>
+                                <input type="tel" class="form-control" name="phone" placeholder="Phone" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" name="email" placeholder="Email Address" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control" name="message" rows="4" placeholder="Message"></textarea>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="me-2">3 + 4 =</span>
+                                    <input type="number" class="form-control" style="width: 100px;" name="captcha" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Business Hours -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-8">
+                <div class="bg-primary text-white p-4 rounded">
+                    <h4 class="text-center mb-4">Our Business Hours</h4>
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <p><strong>Tuesday:</strong> 10am – 7pm</p>
+                            <p><strong>Wednesday:</strong> 10am – 7pm</p>
+                            <p><strong>Thursday:</strong> 10am – 7pm</p>
+                            <p><strong>Friday:</strong> 10am – 7pm</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Saturday:</strong> 10am – 7pm</p>
+                            <p><strong>Sunday:</strong> 11am – 5pm</p>
+                            <p><strong>Monday:</strong> CLOSED</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-8 text-center">
+                <h5 class="text-primary">AARUSHI SALON</h5>
+                <p><strong>1627 SARDIS RD N -4C</strong></p>
+                <p>CHARLOTTE, NC 28270</p>
+                <p><a href="#" class="text-primary">GET DIRECTION</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Appointment Form End -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Simple validation
+    if (!data.full_name || !data.service_category || !data.date || !data.time || !data.phone || !data.email) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Captcha validation
+    if (parseInt(data.captcha) !== 7) {
+        alert('Please solve the math problem correctly');
+        return;
+    }
+    
+    // Submit form
+    fetch('{% url "salon:book_appointment" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Appointment request submitted successfully! We will call you to confirm.');
+            this.reset();
+        } else {
+            alert('Error: ' + (data.error || 'Please try again'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error submitting appointment. Please try again.');
+    });
+});
+</script>
+{% endblock %}
