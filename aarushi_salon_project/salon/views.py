@@ -324,9 +324,11 @@ def blog_detail(request, slug):
 def contact(request):
     """Contact page view"""
     contact_info = ContactInfo.objects.filter(is_active=True).first()
+    service_categories = ServiceCategory.objects.filter(is_active=True).prefetch_related('services')
     
     context = {
         'contact_info': contact_info,
+        'service_categories': service_categories,
     }
     
     return render(request, 'salon/contact_perfectcut.html', context)
