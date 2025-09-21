@@ -63,3 +63,4 @@ class CustomerFeedbackForm(forms.ModelForm):
         # Make phone field not required
         self.fields['phone'].required = False
 
+

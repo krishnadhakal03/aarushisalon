@@ -1,0 +1,174 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block title %}Color Palette Test - Aarushi Salon{% endblock %}
+
+{% block extra_css %}
+<style>
+.test-section {
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 15px;
+    border: 2px solid var(--border-light);
+    background: var(--bg-white);
+}
+
+.color-demo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.color-swatch {
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.primary-swatch { background: var(--primary-color); }
+.primary-light-swatch { background: var(--primary-light); }
+.primary-dark-swatch { background: var(--primary-dark); }
+.secondary-swatch { background: var(--secondary-color); }
+.accent-swatch { background: var(--accent-color); }
+
+.text-demo {
+    margin: 1rem 0;
+}
+
+.text-demo h1 { color: var(--text-dark); }
+.text-demo h2 { color: var(--text-medium); }
+.text-demo h3 { color: var(--text-light); }
+.text-demo p { color: var(--text-muted); }
+
+.button-demo {
+    margin: 1rem 0;
+}
+
+.button-demo .btn {
+    margin: 0.5rem;
+}
+
+.card-demo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.demo-card {
+    background: var(--bg-white);
+    border: 2px solid var(--border-light);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-normal);
+}
+
+.demo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+}
+
+.demo-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.demo-card p {
+    color: var(--text-medium);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5">Color Palette Test Page</h1>
+            
+            <!-- Color Swatches -->
+            <div class="test-section">
+                <h2>Color Palette Swatches</h2>
+                <div class="color-demo">
+                    <div class="color-swatch primary-swatch">Primary</div>
+                    <div class="color-swatch primary-light-swatch">Primary Light</div>
+                    <div class="color-swatch primary-dark-swatch">Primary Dark</div>
+                    <div class="color-swatch secondary-swatch">Secondary</div>
+                    <div class="color-swatch accent-swatch">Accent</div>
+                </div>
+            </div>
+
+            <!-- Typography Demo -->
+            <div class="test-section">
+                <h2>Typography Hierarchy</h2>
+                <div class="text-demo">
+                    <h1>Heading 1 - Main Title</h1>
+                    <h2>Heading 2 - Section Title</h2>
+                    <h3>Heading 3 - Subsection Title</h3>
+                    <p>This is a paragraph with regular text. It should be readable and have good contrast with the background.</p>
+                </div>
+            </div>
+
+            <!-- Button Demo -->
+            <div class="test-section">
+                <h2>Button Styles</h2>
+                <div class="button-demo">
+                    <button class="btn btn-primary">Primary Button</button>
+                    <button class="btn btn-outline-primary">Outline Primary</button>
+                    <button class="btn btn-secondary">Secondary Button</button>
+                    <button class="btn btn-outline-secondary">Outline Secondary</button>
+                </div>
+            </div>
+
+            <!-- Card Demo -->
+            <div class="test-section">
+                <h2>Card Components</h2>
+                <div class="card-demo">
+                    <div class="demo-card">
+                        <h4>Service Card</h4>
+                        <p>This is a demo service card that shows how the color palette affects card styling.</p>
+                    </div>
+                    <div class="demo-card">
+                        <h4>Pricing Card</h4>
+                        <p>This is a demo pricing card with the same styling principles.</p>
+                    </div>
+                    <div class="demo-card">
+                        <h4>Team Card</h4>
+                        <p>This is a demo team member card showing consistent theming.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Background Demo -->
+            <div class="test-section" style="background: var(--bg-light);">
+                <h2>Background Colors</h2>
+                <p>This section uses the light background color to demonstrate contrast and readability.</p>
+            </div>
+
+            <div class="test-section" style="background: var(--bg-cream);">
+                <h2>Cream Background</h2>
+                <p>This section uses the cream background color for a warmer feel.</p>
+            </div>
+
+            <!-- Instructions -->
+            <div class="test-section" style="background: var(--primary-gradient); color: white;">
+                <h2 style="color: white;">Color Palette Instructions</h2>
+                <p style="color: white;">Use the color toggle button on the right side of the screen to switch between different color palettes. Each palette is professionally designed for optimal readability and visual appeal.</p>
+                <ul style="color: white;">
+                    <li><strong>Default Pink:</strong> Current salon theme with pink and rose colors</li>
+                    <li><strong>Dark Theme:</strong> Modern dark theme with purple and teal accents</li>
+                    <li><strong>Blue Theme:</strong> Professional blue theme for corporate feel</li>
+                    <li><strong>Yellow Theme:</strong> Warm yellow theme with brown text</li>
+                    <li><strong>Light Red:</strong> Elegant light red theme with pink accents</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

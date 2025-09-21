@@ -60,3 +60,4 @@ class Command(BaseCommand):
             self.style.SUCCESS(f'Successfully created {len(testimonials_data)} sample testimonials!')
         )
 
+

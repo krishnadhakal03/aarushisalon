@@ -1,0 +1,260 @@
+/* Remove All Button Borders - Override for Aarushi Salon */
+
+/* Remove borders from all button types */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-light,
+.btn-dark,
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-info,
+.btn-outline-light,
+.btn-outline-dark {
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+}
+
+/* Remove borders from button pseudo-elements */
+.btn-primary::before,
+.btn-primary::after,
+.btn-dark::before,
+.btn-dark::after {
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+}
+
+/* Remove specific border properties that were causing issues */
+.btn-primary::after {
+    left: 0 !important;
+    width: 100% !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    display: none !important; /* Completely hide the pseudo-element */
+}
+
+.btn-primary::before {
+    top: 0 !important;
+    height: 100% !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    display: none !important; /* Completely hide the pseudo-element */
+}
+
+.btn-dark::after {
+    left: 0 !important;
+    width: 100% !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    display: none !important; /* Completely hide the pseudo-element */
+}
+
+.btn-dark::before {
+    top: 0 !important;
+    height: 100% !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    display: none !important; /* Completely hide the pseudo-element */
+}
+
+/* Override navbar button borders */
+.navbar .btn-primary {
+    border-width: 0 !important;
+    border: none !important;
+}
+
+/* Override service button borders */
+.service .service-item .btn-primary {
+    border-width: 0 !important;
+    border: none !important;
+}
+
+/* Override blog button borders */
+.blog .btn-dark {
+    border-width: 0 !important;
+    border: none !important;
+}
+
+/* Override team button borders */
+.team-overlay .btn-dark {
+    border-width: 0 !important;
+    border: none !important;
+}
+
+/* Override footer button borders */
+.footer .btn.btn-link {
+    border: none !important;
+}
+
+/* Ensure no box-shadow borders */
+.btn:focus,
+.btn:active,
+.btn:focus-visible {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* AGGRESSIVE OVERRIDE - Force remove all button borders */
+.btn-primary::after,
+.btn-primary::before,
+.btn-dark::after,
+.btn-dark::before {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    content: none !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    z-index: -1 !important;
+}
+
+/* Force override any remaining border styles */
+.btn-primary,
+.btn-dark,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-light {
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* Override any pseudo-element borders with maximum specificity */
+button.btn-primary::after,
+button.btn-primary::before,
+button.btn-dark::after,
+button.btn-dark::before,
+a.btn-primary::after,
+a.btn-primary::before,
+a.btn-dark::after,
+a.btn-dark::before {
+    display: none !important;
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* Remove any remaining border artifacts */
+.btn * {
+    border: none !important;
+}
+
+/* Override Bootstrap default button borders */
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-light,
+.btn-dark {
+    border: 0 !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+}
+
+/* Override outline button borders */
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-info,
+.btn-outline-light,
+.btn-outline-dark {
+    border: 0 !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+}
+
+/* Ensure buttons maintain their styling without borders */
+.btn-primary {
+    background: var(--bs-primary) !important;
+    color: white !important;
+}
+
+.btn-primary:hover {
+    background: var(--bs-primary) !important;
+    opacity: 0.9 !important;
+}
+
+.btn-dark {
+    background: var(--bs-dark) !important;
+    color: white !important;
+}
+
+.btn-dark:hover {
+    background: var(--bs-dark) !important;
+    opacity: 0.9 !important;
+}
+
+/* Remove any focus borders */
+.btn:focus,
+.btn:focus-visible,
+.btn:active {
+    border: none !important;
+    outline: none !important;
+    box-shadow: 0 0 0 0 transparent !important;
+}

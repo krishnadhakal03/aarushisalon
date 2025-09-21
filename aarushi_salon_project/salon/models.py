@@ -368,3 +368,86 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return self.site_name
+
+
+class SEOSettings(models.Model):
+    """SEO settings for the website"""
+    PAGE_TYPES = [
+        ('home', 'Home Page'),
+        ('about', 'About Page'),
+        ('services', 'Services Page'),
+        ('gallery', 'Gallery Page'),
+        ('team', 'Team Page'),
+        ('testimonials', 'Testimonials Page'),
+        ('blog', 'Blog Page'),
+        ('contact', 'Contact Page'),
+        ('pricing', 'Pricing Page'),
+    ]
+    
+    page_type = models.CharField(max_length=20, choices=PAGE_TYPES, unique=True)
+    page_title = models.CharField(max_length=60, help_text="Page title (max 60 characters)")
+    meta_description = models.TextField(max_length=160, help_text="Meta description (max 160 characters)")
+    meta_keywords = models.TextField(blank=True, help_text="Comma-separated keywords")
+    h1_tag = models.CharField(max_length=100, blank=True, help_text="Main H1 heading")
+    h2_tag = models.CharField(max_length=100, blank=True, help_text="Secondary H2 heading")
+    canonical_url = models.URLField(blank=True, help_text="Canonical URL for this page")
+    og_title = models.CharField(max_length=60, blank=True, help_text="Open Graph title")
+    og_description = models.TextField(max_length=160, blank=True, help_text="Open Graph description")
+    og_image = models.ImageField(upload_to='seo/', blank=True, null=True, help_text="Open Graph image")
+    twitter_title = models.CharField(max_length=60, blank=True, help_text="Twitter Card title")
+    twitter_description = models.TextField(max_length=160, blank=True, help_text="Twitter Card description")
+    twitter_image = models.ImageField(upload_to='seo/', blank=True, null=True, help_text="Twitter Card image")
+    schema_markup = models.TextField(blank=True, help_text="JSON-LD structured data")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "SEO Settings"
+        verbose_name_plural = "SEO Settings"
+        ordering = ['page_type']
+
+    def __str__(self):
+        return f"{self.get_page_type_display()} - {self.page_title}"
+
+
+class GoogleAnalytics(models.Model):
+    """Google Analytics and tracking settings"""
+    tracking_id = models.CharField(max_length=20, blank=True, help_text="Google Analytics Tracking ID (e.g., GA-XXXXXXXXX)")
+    gtag_id = models.CharField(max_length=20, blank=True, help_text="Google Analytics 4 Measurement ID (e.g., G-XXXXXXXXXX)")
+    google_tag_manager_id = models.CharField(max_length=20, blank=True, help_text="Google Tag Manager ID (e.g., GTM-XXXXXXX)")
+    facebook_pixel_id = models.CharField(max_length=20, blank=True, help_text="Facebook Pixel ID")
+    google_ads_conversion_id = models.CharField(max_length=20, blank=True, help_text="Google Ads Conversion ID")
+    custom_tracking_code = models.TextField(blank=True, help_text="Custom tracking code (head section)")
+    custom_body_code = models.TextField(blank=True, help_text="Custom tracking code (body section)")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Google Analytics"
+        verbose_name_plural = "Google Analytics"
+
+    def __str__(self):
+        return f"Analytics - {self.tracking_id or self.gtag_id or 'Not Configured'}"
+
+
+class SEOPageContent(models.Model):
+    """Additional SEO content for specific pages"""
+    page_type = models.CharField(max_length=20, choices=SEOSettings.PAGE_TYPES)
+    content_section = models.CharField(max_length=50, help_text="Content section (e.g., 'hero_text', 'about_intro')")
+    title = models.CharField(max_length=200, blank=True)
+    content = models.TextField(blank=True)
+    image_alt_text = models.CharField(max_length=200, blank=True, help_text="Alt text for images")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "SEO Page Content"
+        verbose_name_plural = "SEO Page Content"
+        unique_together = ['page_type', 'content_section']
+        ordering = ['page_type', 'content_section']
+
+    def __str__(self):
+        return f"{self.get_page_type_display()} - {self.content_section}"

@@ -65,6 +65,7 @@ TEMPLATES = [
                 'salon.context_processors.theme_context',
                 'salon.context_processors.site_images_context',
                 'salon.context_processors.service_icons_context',
+                'salon.context_processors.seo_context',
             ],
         },
     },

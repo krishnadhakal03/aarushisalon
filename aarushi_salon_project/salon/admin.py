@@ -6,7 +6,8 @@ from django.shortcuts import redirect
 from .models import (
     ServiceCategory, Service, TeamMember, Testimonial, CustomerFeedback,
     GalleryImage, BlogPost, BlogComment, ContactInfo, Appointment,
-    SiteContent, ThemeSettings, SiteImages, ServiceIcons, SiteSettings
+    SiteContent, ThemeSettings, SiteImages, ServiceIcons, SiteSettings,
+    SEOSettings, GoogleAnalytics, SEOPageContent
 )
 
 
@@ -193,6 +194,83 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ('Business Hours', {
             'fields': ('monday_hours', 'tuesday_hours', 'wednesday_hours', 'thursday_hours', 
                       'friday_hours', 'saturday_hours', 'sunday_hours')
+        }),
+    )
+
+
+@admin.register(SEOSettings, site=admin_site)
+class SEOSettingsAdmin(admin.ModelAdmin):
+    list_display = ['page_type', 'page_title', 'meta_description', 'is_active', 'updated_at']
+    list_filter = ['page_type', 'is_active', 'created_at', 'updated_at']
+    search_fields = ['page_title', 'meta_description', 'meta_keywords', 'h1_tag']
+    list_editable = ['is_active']
+    ordering = ['page_type']
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Basic SEO', {
+            'fields': ('page_type', 'page_title', 'meta_description', 'meta_keywords', 'is_active')
+        }),
+        ('Headings', {
+            'fields': ('h1_tag', 'h2_tag')
+        }),
+        ('URLs & Canonical', {
+            'fields': ('canonical_url',)
+        }),
+        ('Open Graph (Facebook)', {
+            'fields': ('og_title', 'og_description', 'og_image')
+        }),
+        ('Twitter Cards', {
+            'fields': ('twitter_title', 'twitter_description', 'twitter_image')
+        }),
+        ('Structured Data', {
+            'fields': ('schema_markup',)
+        }),
+    )
+
+
+@admin.register(GoogleAnalytics, site=admin_site)
+class GoogleAnalyticsAdmin(admin.ModelAdmin):
+    list_display = ['tracking_id', 'gtag_id', 'google_tag_manager_id', 'is_active', 'updated_at']
+    list_filter = ['is_active', 'created_at', 'updated_at']
+    search_fields = ['tracking_id', 'gtag_id', 'google_tag_manager_id', 'facebook_pixel_id']
+    list_editable = ['is_active']
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Google Analytics', {
+            'fields': ('tracking_id', 'gtag_id', 'is_active')
+        }),
+        ('Google Tag Manager', {
+            'fields': ('google_tag_manager_id',)
+        }),
+        ('Social Media Tracking', {
+            'fields': ('facebook_pixel_id',)
+        }),
+        ('Google Ads', {
+            'fields': ('google_ads_conversion_id',)
+        }),
+        ('Custom Tracking Code', {
+            'fields': ('custom_tracking_code', 'custom_body_code')
+        }),
+    )
+
+
+@admin.register(SEOPageContent, site=admin_site)
+class SEOPageContentAdmin(admin.ModelAdmin):
+    list_display = ['page_type', 'content_section', 'title', 'is_active', 'updated_at']
+    list_filter = ['page_type', 'is_active', 'created_at', 'updated_at']
+    search_fields = ['page_type', 'content_section', 'title', 'content']
+    list_editable = ['is_active']
+    ordering = ['page_type', 'content_section']
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Content Information', {
+            'fields': ('page_type', 'content_section', 'title', 'is_active')
+        }),
+        ('Content', {
+            'fields': ('content',)
+        }),
+        ('Image SEO', {
+            'fields': ('image_alt_text',)
         }),
     )
 
