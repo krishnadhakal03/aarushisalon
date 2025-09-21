@@ -67,16 +67,16 @@
             <div class="collapse navbar-collapse p-3" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
                     <a href="{% url 'salon:home' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
-                    <a href="{% url 'salon:about' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
+                    <a href="" class="nav-item nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
                     <a href="{% url 'salon:services' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'services' %}active{% endif %}">Services</a>
                     <a href="{% url 'salon:pricing' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'pricing' %}active{% endif %}">Pricing</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu bg-light mt-2">
-                            <a href="{% url 'salon:gallery' %}" class="dropdown-item">Photo Gallery</a>
-                            <a href="{% url 'salon:blog' %}" class="dropdown-item">Beauty Blog</a>
-                            <a href="{% url 'salon:team' %}" class="dropdown-item">Our Team</a>
-                            <a href="{% url 'salon:testimonials' %}" class="dropdown-item">Testimonials</a>
+                            <a href="" class="dropdown-item">Photo Gallery</a>
+                            <a href="" class="dropdown-item">Beauty Blog</a>
+                            <a href="" class="dropdown-item">Our Team</a>
+                            <a href="" class="dropdown-item">Testimonials</a>
                         </div>
                     </div>
                     <a href="{% url 'salon:contact' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
