@@ -1,0 +1,124 @@
+{% extends 'salon/base_perfectcut.html' %}
+{% load static %}
+{% load salon_extras %}
+
+{% block title %}Pricing - {{ site_settings.site_name|default:'Aarushi Salon' }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pricing-hero-section" style="min-height: 40vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% static 'img/price-1.jpg' %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">Service Pricing</h1>
+                    <p class="hero-subtitle">Transparent pricing for all our beauty services</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>No Hidden Fees</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Quality Guaranteed</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Professional Service</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="pricing-section py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Pricing</h2>
+            <p>Choose the perfect service package for your needs</p>
+        </div>
+        
+        {% if service_categories %}
+        <div class="row">
+            {% for category in service_categories %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <div class="pricing-icon">
+                            {% with icon=service_icons|lookup:category.name %}
+                            {% if icon %}
+                                <i class="{{ icon.icon_class }}"></i>
+                            {% else %}
+                                {% if category.name == 'Skin Care' %}
+                                    <i class="fas fa-spa"></i>
+                                {% elif category.name == 'Hair Styling' %}
+                                    <i class="fas fa-cut"></i>
+                                {% elif category.name == 'Color' %}
+                                    <i class="fas fa-palette"></i>
+                                {% elif category.name == 'Waxing' or category.name == 'Threading' %}
+                                    <i class="fas fa-hand-holding-heart"></i>
+                                {% elif category.name == 'Massage' %}
+                                    <i class="fas fa-hands"></i>
+                                {% elif category.name == 'Make Up' %}
+                                    <i class="fas fa-paint-brush"></i>
+                                {% elif category.name == 'Bridal Package' %}
+                                    <i class="fas fa-heart"></i>
+                                {% elif category.name == 'Herbal Bleach' or category.name == 'Body Scrub' %}
+                                    <i class="fas fa-leaf"></i>
+                                {% elif category.name == 'Henna Design' %}
+                                    <i class="fas fa-paint-brush"></i>
+                                {% else %}
+                                    <i class="fas fa-star"></i>
+                                {% endif %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                        <h4>{{ category.name }}</h4>
+                        <p>{{ category.description|default:"Professional beauty services" }}</p>
+                    </div>
+                    <div class="pricing-body">
+                        {% for service in category.services.all %}
+                        <div class="pricing-item">
+                            <div class="service-name">{{ service.name }}</div>
+                            <div class="service-price">${{ service.price }}</div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No services available</p>
+                        {% endfor %}
+                    </div>
+                    <div class="pricing-footer">
+                        <a href="{% url 'salon:book_appointment' %}" class="btn btn-primary w-100">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center">
+            <h3>No pricing available</h3>
+            <p>Please check back later for our service pricing.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Contact CTA -->
+<section class="contact-cta py-5" style="background: var(--bg-light);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="mb-3">Have Questions About Our Pricing?</h3>
+                <p class="mb-0">Contact us for more information about our services and pricing</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'salon:contact' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-phone me-2"></i>Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

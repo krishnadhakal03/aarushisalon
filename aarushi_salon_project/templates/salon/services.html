@@ -1,5 +1,6 @@
 {% extends 'salon/base.html' %}
 {% load static %}
+{% load salon_extras %}
 
 {% block title %}Our Services - Aarushi Salon{% endblock %}
 
@@ -34,17 +35,37 @@
         <div class="row g-4 mb-5">
             {% for service in category.services.all %}
             <div class="col-md-6 col-lg-4">
-                <div class="service-item h-100 p-4 border wow fadeIn" data-wow-delay="0.1s">
-                    {% if service.image %}
-                    <img class="img-fluid mb-3" src="{{ service.image.url }}" alt="{{ service.name }}" style="width: 70px; height: 70px; object-fit: cover;">
-                    {% else %}
-                    <img class="img-fluid mb-3" src="{% static 'img/haircut.png' %}" alt="{{ service.name }}" style="width: 70px; height: 70px; object-fit: cover;">
-                    {% endif %}
-                    <h3 class="mb-3">{{ service.name }}</h3>
-                    <p class="mb-3">{{ service.description|truncatewords:20 }}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="text-primary mb-0">${{ service.price }}</h4>
-                        <a class="btn btn-sm btn-primary text-uppercase" href="{% url 'salon:service_detail' service.id %}">Read More <i class="bi bi-arrow-right"></i></a>
+                <div class="service-card wow fadeIn" data-wow-delay="0.1s">
+                    {% with icon=service_icons|lookup:category.name %}
+                    <div class="service-icon" style="color: {% if icon %}{{ icon.icon_color }}{% else %}{{ theme_settings.primary_color|default:'#e91e63' }}{% endif %}; background-color: {% if icon %}{{ icon.background_color }}{% else %}{{ theme_settings.secondary_color|default:'#ff4081' }}{% endif %};">
+                        {% if icon %}
+                            <i class="{{ icon.icon_class }}"></i>
+                        {% else %}
+                            {% if category.name == 'Skin Care' %}
+                                <i class="fas fa-spa"></i>
+                            {% elif category.name == 'Hair Styling' or category.name == 'Color' %}
+                                <i class="fas fa-cut"></i>
+                            {% elif category.name == 'Waxing' or category.name == 'Threading' %}
+                                <i class="fas fa-hand-holding-heart"></i>
+                            {% elif category.name == 'Massage' %}
+                                <i class="fas fa-hands"></i>
+                            {% elif category.name == 'Make Up' or category.name == 'Bridal Package' %}
+                                <i class="fas fa-makeup"></i>
+                            {% elif category.name == 'Herbal Bleach' or category.name == 'Body Scrub' %}
+                                <i class="fas fa-leaf"></i>
+                            {% elif category.name == 'Henna Design' %}
+                                <i class="fas fa-paint-brush"></i>
+                            {% else %}
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    {% endwith %}
+                    <h3 class="mb-3 text-center">{{ service.name }}</h3>
+                    <p class="mb-3 text-center">{{ service.description|truncatewords:20 }}</p>
+                    <div class="text-center">
+                        <div class="price mb-3">${{ service.price }}</div>
+                        <a class="btn btn-primary text-uppercase" href="{% url 'salon:service_detail' service.id %}">Book Now <i class="bi bi-arrow-right"></i></a>
                     </div>
                 </div>
             </div>

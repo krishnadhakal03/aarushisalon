@@ -1,0 +1,102 @@
+{% extends 'salon/base_perfectcut.html' %}
+{% load static %}
+
+{% block title %}About Us - {{ site_settings.site_name|default:'Aarushi Salon' }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero-section" style="min-height: 40vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% static 'img/about.jpg' %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">About Us</h1>
+                    <p class="hero-subtitle">Learn more about our salon and our commitment to beauty</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Experienced Team</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Quality Service</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Customer Satisfaction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Content Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="about-content">
+                    <h2>{{ site_content.about_title.title|default:'About Our Salon' }}</h2>
+                    <p>{{ site_content.about_content.content|default:'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English.' }}</p>
+                    <p>Our certified therapists provide the highest level of service, fully customized to your needs. We make the best makeup and hairdressing in our professional salon environment.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-image">
+                    {% if site_images.about_bg %}
+                        <img src="{{ site_images.about_bg.image.url }}" alt="About Aarushi Salon">
+                    {% else %}
+                        <img src="{% static 'img/about.jpg' %}" alt="About Aarushi Salon">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+{% if team_members %}
+<section class="services-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Team</h2>
+            <p>Meet our professional beauty experts</p>
+        </div>
+        <div class="row">
+            {% for member in team_members %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>{{ member.name }}</h3>
+                    <p>{{ member.position }}</p>
+                    {% if member.specialization %}
+                    <p><small>{{ member.specialization }}</small></p>
+                    {% endif %}
+                    {% if member.bio %}
+                    <p>{{ member.bio|truncatewords:20 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Contact CTA Section -->
+<section class="contact-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2>Ready to Experience Our Services?</h2>
+                <p>Book your appointment today and let us help you look and feel your best.</p>
+                <a href="{% url 'salon:contact' %}" class="btn btn-primary">Book Appointment</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

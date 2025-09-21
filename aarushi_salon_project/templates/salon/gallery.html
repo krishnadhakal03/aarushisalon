@@ -1,0 +1,103 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block title %}Gallery - Aarushi Salon{% endblock %}
+
+{% block meta_description %}Explore our beautiful gallery showcasing our salon's work, before and after photos, and the amazing transformations we create for our clients.{% endblock %}
+
+{% block content %}
+<!-- Hero Start -->
+<div class="container-fluid bg-light page-header py-5 mb-5">
+    <div class="container text-center py-5">
+        <h1 class="display-1 animated slideInLeft">Gallery</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center animated slideInLeft mb-0">
+                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-primary" href="#">Pages</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Gallery</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Hero End -->
+
+<!-- Gallery Start -->
+<div class="container-fluid gallery py-5">
+    <div class="container">
+        <div class="text-center wow fadeIn" data-wow-delay="0.2s">
+            <h1 class="font-dancing-script text-primary">Gallery</h1>
+            <h1 class="mb-5">Explore Our Gallery</h1>
+        </div>
+        
+        {% if gallery_images %}
+        <div class="row g-0">
+            {% for image in gallery_images %}
+            <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.2s">
+                <div class="gallery-item h-100">
+                    {% if image.image %}
+                    <img src="{{ image.image.url }}" class="img-fluid w-100 h-100" alt="{{ image.title|default:'Gallery Image' }}">
+                    {% else %}
+                    <img src="{% static 'img/gallery-1.jpg' %}" class="img-fluid w-100 h-100" alt="Gallery Image">
+                    {% endif %}
+                    <div class="gallery-icon">
+                        <a href="{% if image.image %}{{ image.image.url }}{% else %}{% static 'img/gallery-1.jpg' %}{% endif %}" 
+                           class="btn btn-primary btn-lg-square" 
+                           data-lightbox="Gallery-{{ forloop.counter }}">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <nav aria-label="Gallery pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo; First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+                        
+                        <li class="page-item active">
+                            <span class="page-link">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                        </li>
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <h4>Gallery Coming Soon!</h4>
+                    <p>We're working on adding beautiful photos of our work. Check back soon to see our amazing transformations!</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- Gallery End -->
+{% endblock %}
+

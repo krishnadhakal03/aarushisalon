@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
 from salon.models import (
     ServiceCategory, Service, TeamMember, Testimonial, 
-    GalleryImage, BlogPost, ContactInfo, SiteContent
+    GalleryImage, BlogPost, ContactInfo, SiteContent,
+    ThemeSettings, SiteImages, ServiceIcons, SiteSettings
 )
 
 
@@ -11,30 +12,30 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('Starting to populate database...')
 
-        # Create Contact Information
+        # Create Contact Information (Based on Aarushi Salon website)
         contact_info, created = ContactInfo.objects.get_or_create(
             defaults={
-                'phone': '+123456789',
-                'email': 'info@aarushisalon.com',
-                'address': '123 Street, New York, USA',
-                'facebook_url': 'https://facebook.com/aarushisalon',
-                'instagram_url': 'https://instagram.com/aarushisalon',
-                'linkedin_url': 'https://linkedin.com/company/aarushisalon',
-                'twitter_url': 'https://twitter.com/aarushisalon',
+                'phone': '+1 (555) 123-4567',  # Update with actual phone from website
+                'email': 'info@arushisalon.com',
+                'address': 'Convenient salon located in a shopping district near Walmart',
+                'facebook_url': 'https://facebook.com/arushisalon',
+                'instagram_url': 'https://instagram.com/arushisalon',
+                'linkedin_url': 'https://linkedin.com/company/arushisalon',
+                'twitter_url': 'https://twitter.com/arushisalon',
             }
         )
         if created:
             self.stdout.write('Created contact information')
 
-        # Create Site Content
+        # Create Site Content (Based on Aarushi Salon website)
         site_content_data = [
-            ('hero_title', 'Welcome', 'Welcome to Aarushi Salon'),
+            ('hero_title', 'Aarushi Salon', 'Aarushi Salon'),
             ('hero_subtitle', 'Best Beauty Service', 'Best Beauty Service'),
             ('about_title', 'About Us', 'About Us'),
             ('about_subtitle', 'Why People Choose Us!', 'Why People Choose Us!'),
             ('about_content', 'About Content', 'With over ten years experience in the industry, our certified therapists are dedicated to providing you with the highest level of service, with each treatment and package fully customized and tailored to your personal needs.'),
             ('experience_years', '10', '10'),
-            ('happy_customers', '999', '999'),
+            ('happy_customers', '500+', '500+'),
         ]
 
         for content_type, title, content in site_content_data:
@@ -47,16 +48,16 @@ class Command(BaseCommand):
         # Create Service Categories
         categories_data = [
             ('Skin Care', 'Professional skin care treatments for all skin types', 'fas fa-spa'),
-            ('Waxing', 'Hair removal services using premium waxing techniques', 'fas fa-cut'),
-            ('Threading', 'Precise hair removal using traditional threading method', 'fas fa-eye'),
-            ('Hair Styling', 'Professional hair cutting, styling, and coloring services', 'fas fa-cut'),
-            ('Color', 'Hair coloring and highlighting services', 'fas fa-palette'),
-            ('Herbal Bleach', 'Natural herbal skin lightening treatments', 'fas fa-leaf'),
-            ('Body Scrub', 'Exfoliating body treatments for smooth, healthy skin', 'fas fa-hand-holding-heart'),
-            ('Henna Design', 'Beautiful henna art for special occasions', 'fas fa-paint-brush'),
-            ('Make Up', 'Professional makeup services for all occasions', 'fas fa-makeup'),
-            ('Bridal Package', 'Complete bridal beauty packages', 'fas fa-heart'),
-            ('Massage', 'Relaxing and therapeutic massage services', 'fas fa-hands'),
+            ('Waxing', 'Remove unwanted hair from (a part of the body) by applying wax and then peeling off the wax and hairs together.', 'fas fa-hand-holding-heart'),
+            ('Massage', 'Deep tissue massage to release chronic muscle tension. Manual manipulation of soft body tissues (muscle, connective tissue, tendons and ligaments) to enhance a person\'s health and well-being.', 'fas fa-hands'),
+            ('Threading', 'As opposed to waxing, tweezing, or lasers, threading is considered one of the safest and most precise methods of hair removal, especially in the delicate areas surrounding the eye. "Threading allows our specialists to have greater control over which hairs are removed,"', 'fas fa-eye'),
+            ('Hair Styling', 'Something Special! Treat yourself, boost confidence & relax. Create any look for any type of hair with professional styling at Aarushi Salon.', 'fas fa-cut'),
+            ('Color', 'Add style to your busy life, create one cohesive and natural look with coloring at Aarushi Salon. Book Appointment or Call us to ask for more details!', 'fas fa-palette'),
+            ('Herbal Bleach', 'All natural ingredients & cosmetics. Complete Herbal skin lightening treatment; Unique herbal ingredients are soothing to the skin; Enriched with herbal extracts of vegetables, fruits, flowers & Herbs from Himalayas at Aarushi Salon!', 'fas fa-leaf'),
+            ('Body Scrub', 'Popular way to stimulate skin circulation and get rid of dry, dead skin cells. Firm, smooth and detoxify your whole body with an exfoliating body scrub at Aarushi Salon.', 'fas fa-hand-holding-heart'),
+            ('Henna Design', 'Henna is an important part in Indian culture, for all the ladies and girls out there, best designs for hands suited for any even. Expose your bridal charm!', 'fas fa-paint-brush'),
+            ('Make Up', 'Gentle ingredients promote healthy skin , Versatile pigments wet or dry as a temporary hair colorant, lip color, blush, highlighter, eye shadow, eyeliner, and body shimmer. Beautify your confidence!', 'fas fa-paint-brush'),
+            ('Bridal Package', 'Perfect bridal packages to make the most important day of your life even more fabulous!', 'fas fa-heart'),
         ]
 
         for name, description, icon in categories_data:
@@ -189,12 +190,12 @@ class Command(BaseCommand):
             )
         self.stdout.write('Created team members')
 
-        # Create Testimonials
+        # Create Testimonials (Real reviews from Aarushi Salon website)
         testimonials_data = [
-            ('Jenita M.', 'Regular Customer', 'Convenient salon located in a shopping district near Walmart. I\'ve been coming here for a year to get my eyebrow threaded. Quick and quite painless here. Always satisfied with the look and the owner always give me an eyebrow massage with oil when she finishes. It helps with the redness for sure. Never quick or cut corners to get it over. Even precise with trimming and plucking where needed. I walk in and pretty much never have to wait.', 5, True),
-            ('Stacey H.', 'Satisfied Customer', 'Super friendly place! I walked in on a whim to see what services they offer. Pretty much everything! I tried out the eyebrow wax first. Great job with that. She also introduced me to threading for the first time. Very interesting and didn\'t hurt like I expected it to. While I was there I decided to get a deep hair conditioning treatment. That felt amazing. I\'m definitely looking forward to trying out their facials next month.', 5, True),
-            ('Ruchi M.', 'Happy Client', 'Made an appointment for eyebrows based on the great reviews my friends gave. Anjana is great at shaping eyebrows. She took her time and didn\'t rush at all. Highly recommend this place if you want perfectly shaped brows.', 5, True),
-            ('Carmel Woodard', 'Loyal Customer', 'Great services, amazing work, and super friendly staff. I will recommend this place to any and everyone!', 5, True),
+            ('Jenita M.', 'Yelp Review', 'Convenient salon located in a shopping district near Walmart. I\'ve been coming here for a year to get my eyebrow threaded. Quick and quite painless here. Always satisfied with the look and the owner always give me an eyebrow massage with oil when she finishes. It helps with the redness for sure. Never quick or cut corners to get it over. Even precise with trimming and plucking where needed. I walk in and pretty much never have to wait. Canned soft drinks and water available. Cash and debit/credit accepted. You may can find a coupon for first time customer next door at Kona Snow for eyebrow, hair, and massages.', 5, True),
+            ('Stacey H.', 'Yelp Review', 'Super friendly place! I walked in on a whim to see what services they offer. Pretty much everything! I tried out the eyebrow wax first. Great job with that. She also introduced me to threading for the first time. Very interesting and didn\'t hurt like I expected it to. While I was there I decided to get a deep hair conditioning treatment. That felt amazing. I\'m definitely looking forward to trying out their facials next month. Update: I decided to get a cut and color done yesterday. Amazing! I had the best style done. She\'s wonderful! I\'m very picky about my blow out. I don\'t ever want to wash it again! My hair is naturally curly so I\'m loving this!!', 5, True),
+            ('Ruchi M.', 'Yelp Review', 'Made an appointment for eyebrows based on the great reviews my friends gave. Anjana is great at shaping eyebrows. She took her time and didn\'t rush at all. Highly recommend this place if you want perfectly shaped brows.', 5, True),
+            ('Carmel Woodard', 'Google Review', 'Great services, amazing work, and super friendly staff. I will recommend this place to any and everyone!', 5, True),
         ]
 
         for client_name, profession, content, rating, is_featured in testimonials_data:
@@ -211,11 +212,13 @@ class Command(BaseCommand):
 
         # Create Blog Posts
         blog_posts_data = [
-            ('How to Extend The Life of Your Haircolor', 'how-to-extend-the-life-of-your-haircolor', 'Learn professional tips and tricks to make your hair color last longer and maintain its vibrancy between salon visits.', 'Hair color maintenance is essential for keeping your color looking fresh and vibrant. Here are some expert tips to extend the life of your haircolor...', 'Hair Salon', True),
-            ('Hottest Hairstyles and Haircuts in 2024', 'hottest-hairstyles-and-haircuts-in-2024', 'Discover the latest hair trends and most popular hairstyles that are taking the beauty world by storm this year.', 'From bold cuts to elegant styles, 2024 brings exciting new hair trends. Here are the hottest hairstyles and haircuts that are trending right now...', 'Hair Salon', True),
+            ('Best Hair Styles for 2024', 'best-hair-styles-2024', 'Discover the most trending and flattering hair styles that will make you look stunning this year.', 'Hair styling is an art form that evolves with each season. In 2024, we\'re seeing a beautiful blend of classic elegance and modern edge. From the timeless bob with a contemporary twist to the romantic long layers that frame your face perfectly, there\'s a style for every personality and face shape. Our expert stylists have curated the most flattering cuts that work for both professional settings and special occasions. Whether you prefer short, medium, or long hair, we\'ll help you find the perfect style that enhances your natural beauty and boosts your confidence. The key is choosing a cut that complements your face shape, hair texture, and lifestyle. Don\'t be afraid to experiment with layers, bangs, or color highlights to make your look truly unique.', 'Hair Styling', 'published', 'hair, styling, trends, 2024, cuts, beauty', True),
+            ('Facial Treatments: Your Complete Guide', 'facial-treatments-guide', 'Everything you need to know about facial treatments to achieve glowing, healthy skin.', 'Facial treatments are essential for maintaining healthy, radiant skin at any age. Our comprehensive guide covers everything from basic cleansing routines to advanced professional treatments. Whether you\'re dealing with acne, aging, or just want to maintain your skin\'s natural glow, the right facial treatment can make all the difference. We explore different types of facials including deep cleansing, hydrating, anti-aging, and specialized treatments for sensitive skin. Learn about the benefits of regular facials, how often you should get them, and what to expect during your treatment. Our licensed estheticians share their expert tips for at-home care between professional treatments, including product recommendations and techniques that will keep your skin looking its best. Remember, consistency is key when it comes to skincare, and professional treatments should be complemented with a good daily routine.', 'Facial Care', 'published', 'facial, skincare, treatments, beauty, skin health', True),
+            ('Eyebrow Threading: Everything You Need to Know', 'eyebrow-threading-guide', 'Master the art of eyebrow threading with our comprehensive guide to perfect brows.', 'Eyebrow threading is one of the most precise and effective methods for shaping and maintaining beautiful eyebrows. This ancient technique uses a twisted cotton thread to remove unwanted hair, creating clean, defined lines that last longer than other hair removal methods. Our detailed guide covers the threading process, benefits, aftercare, and what to expect during your appointment. Threading is particularly effective for creating sharp, clean lines and is gentle on sensitive skin around the eyes. We discuss the difference between threading and other hair removal methods, how to prepare for your appointment, and tips for maintaining your brows between visits. Our experienced technicians share their secrets for achieving the perfect arch and shape that complements your face structure. Whether you prefer a natural look or a more dramatic arch, threading can help you achieve the brows of your dreams.', 'Threading', 'published', 'eyebrow, threading, beauty, grooming, brows', False),
+            ('Hair Color Trends: From Natural to Bold', 'hair-color-trends-2024', 'Explore the hottest hair color trends that will make you stand out this year.', 'Hair color is one of the most powerful ways to express your personality and transform your entire look. In 2024, we\'re seeing an exciting mix of natural, sun-kissed tones and bold, statement-making colors. From the ever-popular balayage and highlights to vibrant fashion colors and rich, deep tones, there\'s something for everyone. Our color experts break down the latest trends, including the return of warm, golden tones, the popularity of dimensional coloring, and the rise of low-maintenance color techniques. We discuss how to choose the right color for your skin tone, hair type, and lifestyle. Whether you want a subtle change or a dramatic transformation, our professional colorists can help you achieve the perfect look. We also cover important topics like color maintenance, protecting your hair from damage, and how to transition between different color trends safely.', 'Hair Color', 'published', 'hair color, trends, balayage, highlights, beauty', False),
         ]
 
-        for title, slug, excerpt, content, category, is_featured in blog_posts_data:
+        for title, slug, excerpt, content, category, status, tags, is_featured in blog_posts_data:
             BlogPost.objects.get_or_create(
                 slug=slug,
                 defaults={
@@ -223,10 +226,81 @@ class Command(BaseCommand):
                     'excerpt': excerpt,
                     'content': content,
                     'category': category,
+                    'status': status,
+                    'tags': tags,
                     'is_featured': is_featured,
                 }
             )
         self.stdout.write('Created blog posts')
+
+        # Create Theme Settings
+        theme_settings, created = ThemeSettings.objects.get_or_create(
+            name="Aarushi Salon Theme",
+            defaults={
+                'primary_color': '#8B5A3C',
+                'secondary_color': '#A67C52',
+                'accent_color': '#D4AF8C',
+                'text_color': '#2c2c2c',
+                'background_color': '#ffffff',
+                'heading_font': 'Playfair Display',
+                'body_font': 'Open Sans',
+                'enable_gradients': True,
+                'enable_animations': True,
+                'enable_shadows': True,
+                'is_active': True,
+            }
+        )
+        self.stdout.write('Created theme settings')
+
+        # Create Site Settings
+        site_settings, created = SiteSettings.objects.get_or_create(
+            site_name="Aarushi Salon",
+            defaults={
+                'site_tagline': 'Beauty & Wellness',
+                'site_description': 'Professional beauty salon services including hair styling, makeup, skincare, massage, and more.',
+                'phone': '+1 (555) 123-4567',
+                'email': 'info@arushisalon.com',
+                'address': 'Convenient salon located in a shopping district near Walmart',
+                'facebook_url': 'https://facebook.com/arushisalon',
+                'instagram_url': 'https://instagram.com/arushisalon',
+                'linkedin_url': 'https://linkedin.com/company/arushisalon',
+                'twitter_url': 'https://twitter.com/arushisalon',
+                'is_active': True,
+            }
+        )
+        self.stdout.write('Created site settings')
+
+        # Create Service Icons
+        service_icons_data = [
+            ('Skin Care', 'fas fa-spa', '#8B5A3C', '#A67C52'),
+            ('Hair Styling', 'fas fa-cut', '#8B5A3C', '#A67C52'),
+            ('Color', 'fas fa-palette', '#8B5A3C', '#A67C52'),
+            ('Waxing', 'fas fa-hand-holding-heart', '#8B5A3C', '#A67C52'),
+            ('Threading', 'fas fa-hand-holding-heart', '#8B5A3C', '#A67C52'),
+            ('Massage', 'fas fa-hands', '#8B5A3C', '#A67C52'),
+            ('Make Up', 'fas fa-makeup', '#8B5A3C', '#A67C52'),
+            ('Bridal Package', 'fas fa-makeup', '#8B5A3C', '#A67C52'),
+            ('Herbal Bleach', 'fas fa-leaf', '#8B5A3C', '#A67C52'),
+            ('Body Scrub', 'fas fa-leaf', '#8B5A3C', '#A67C52'),
+            ('Henna Design', 'fas fa-paint-brush', '#8B5A3C', '#A67C52'),
+        ]
+
+        for category_name, icon_class, icon_color, bg_color in service_icons_data:
+            try:
+                category = ServiceCategory.objects.get(name=category_name)
+                ServiceIcons.objects.get_or_create(
+                    service_category=category,
+                    defaults={
+                        'icon_class': icon_class,
+                        'icon_color': icon_color,
+                        'background_color': bg_color,
+                        'is_active': True,
+                    }
+                )
+            except ServiceCategory.DoesNotExist:
+                continue
+
+        self.stdout.write('Created service icons')
 
         self.stdout.write(
             self.style.SUCCESS('Successfully populated database with Aarushi Salon content!')

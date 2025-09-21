@@ -1,0 +1,134 @@
+{% extends 'salon/base_perfectcut.html' %}
+{% load static %}
+
+{% block title %}Testimonials - {{ site_settings.site_name|default:'Aarushi Salon' }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="testimonials-hero-section" style="min-height: 40vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% static 'img/hero-bg.jpg' %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">Client Testimonials</h1>
+                    <p class="hero-subtitle">What our satisfied clients say about us</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>5-Star Reviews</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Happy Clients</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Trusted Service</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>What Our Clients Say</h2>
+            <p>Read testimonials from our satisfied customers</p>
+        </div>
+        
+        {% if testimonials %}
+        <div class="row">
+            {% for testimonial in testimonials %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="testimonial-quote">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">"{{ testimonial.content }}"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            {% if testimonial.image %}
+                                <img src="{{ testimonial.image.url }}" alt="{{ testimonial.client_name }}" class="img-fluid">
+                            {% else %}
+                                <img src="{% static 'img/testimonial-1.jpg' %}" alt="{{ testimonial.client_name }}" class="img-fluid">
+                            {% endif %}
+                        </div>
+                        <div class="author-info">
+                            <h5>{{ testimonial.client_name }}</h5>
+                            {% if testimonial.client_profession %}
+                            <p class="author-profession">{{ testimonial.client_profession }}</p>
+                            {% endif %}
+                            <div class="testimonial-rating">
+                                {% for i in "12345" %}
+                                <i class="fas fa-star"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Testimonials pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="text-center">
+            <h3>No testimonials available</h3>
+            <p>Check back soon for client testimonials!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5" style="background: var(--bg-gradient);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="text-white mb-3">Ready to Join Our Happy Clients?</h3>
+                <p class="text-white mb-0">Book your appointment today and experience our exceptional service</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'salon:book_appointment' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-calendar-alt me-2"></i>Book Appointment
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

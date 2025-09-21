@@ -10,8 +10,12 @@
         <div class="row g-0 align-items-center">
             <div class="col-lg-6 hero-header-text py-5">
                 <div class="py-5 px-3 ps-lg-0">
-                    <h1 class="font-dancing-script text-primary animated slideInLeft">Welcome</h1>
+                    <h1 class="font-dancing-script text-primary animated slideInLeft">Aarushi Salon</h1>
                     <h1 class="display-1 mb-4 animated slideInLeft">Best Beauty Service</h1>
+                    <div class="mb-4 animated slideInLeft">
+                        <a href="{% url 'salon:contact' %}" class="btn btn-primary btn-lg me-3">Book Appointment</a>
+                        <a href="{% url 'salon:services' %}" class="btn btn-outline-primary btn-lg">Our Services</a>
+                    </div>
                     <div class="row g-4 animated slideInLeft">
                         <div class="col-md-6">
                             <div class="d-flex align-items-center">
@@ -210,102 +214,4 @@
 </div>
 <!-- Gallery End -->
 
-<!-- Team Start -->
-<div class="container-fluid overflow-hidden py-5">
-    <div class="container">
-        <div class="text-center wow fadeIn" data-wow-delay="0.2s">
-            <h1 class="font-dancing-script text-primary">Team Members</h1>
-            <h1 class="mb-5">Our Experienced Specialists</h1>
-        </div>
-        <div class="row g-4 team">
-            {% for member in team_members %}
-            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
-                <div class="team-item position-relative overflow-hidden">
-                    {% if member.image %}
-                    <img class="img-fluid w-100" src="{{ member.image.url }}" alt="{{ member.name }}">
-                    {% else %}
-                    <img class="img-fluid w-100" src="{% static 'img/team-1.jpg' %}" alt="{{ member.name }}">
-                    {% endif %}
-                    <div class="team-overlay">
-                        <p class="text-primary mb-1">{{ member.position }}</p>
-                        <h4>{{ member.name }}</h4>
-                        <div class="d-flex justify-content-center">
-                            {% if member.facebook_url %}
-                            <a class="btn btn-dark btn-sm-square border-2 me-3" href="{{ member.facebook_url }}" target="_blank">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            {% endif %}
-                            {% if member.instagram_url %}
-                            <a class="btn btn-dark btn-sm-square border-2 me-3" href="{{ member.instagram_url }}" target="_blank">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            {% endif %}
-                            {% if member.linkedin_url %}
-                            <a class="btn btn-dark btn-sm-square border-2" href="{{ member.linkedin_url }}" target="_blank">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-<!-- Team End -->
-
-<!-- Testimonial Start -->
-<div class="container-fluid py-5">
-    <div class="container">
-        <div class="text-center wow fadeIn" data-wow-delay="0.2s">
-            <h1 class="font-dancing-script text-primary">Testimonial</h1>
-            <h1 class="mb-5">What Clients Say!</h1>
-        </div>
-        <div class="owl-carousel testimonial-carousel wow fadeIn" data-wow-delay="0.3s">
-            {% for testimonial in testimonials %}
-            <div class="text-center bg-light p-4">
-                <i class="fa fa-quote-left fa-3x mb-3"></i>
-                <p>{{ testimonial.content }}</p>
-                {% if testimonial.image %}
-                <img class="img-fluid mx-auto border p-1 mb-3" src="{{ testimonial.image.url }}" alt="{{ testimonial.client_name }}">
-                {% else %}
-                <img class="img-fluid mx-auto border p-1 mb-3" src="{% static 'img/testimonial-1.jpg' %}" alt="{{ testimonial.client_name }}">
-                {% endif %}
-                <h4 class="mb-1">{{ testimonial.client_name }}</h4>
-                <span>{{ testimonial.profession }}</span>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-<!-- Testimonial End -->
-
-<!-- Blog Start -->
-<div class="container-fluid blog p-0 mt-5">
-    <div class="row g-0">
-        {% for post in blog_posts %}
-        <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
-            <div class="h-100 d-flex flex-column justify-content-center bg-primary py-5 px-4">
-                <p class="mb-2"><i class="fa fa-calendar-alt text-dark me-1"></i>{{ post.created_at|date:"M d, Y" }} | <i class="fa fa-folder-open text-dark me-1"></i>{{ post.category }}</p>
-                <h3 class="mb-3">{{ post.title }}</h3>
-                <p>{{ post.excerpt|default:post.content|truncatewords:20 }}</p>
-                <a class="btn btn-dark align-self-start text-uppercase" href="{% url 'salon:blog_detail' post.slug %}">Read More <i class="bi bi-arrow-right"></i></a>
-            </div>
-        </div>
-        {% if forloop.counter == 1 %}
-        <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
-            <div class="h-100">
-                {% if post.image %}
-                <img class="img-fluid w-100 h-100" src="{{ post.image.url }}" alt="{{ post.title }}" style="object-fit: cover;">
-                {% else %}
-                <img class="img-fluid w-100 h-100" src="{% static 'img/blog-1.jpg' %}" alt="{{ post.title }}" style="object-fit: cover;">
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
-        {% endfor %}
-    </div>
-</div>
-<!-- Blog End -->
 {% endblock %}

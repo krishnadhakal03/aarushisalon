@@ -1,0 +1,112 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block title %}{{ service.name }} - Aarushi Salon{% endblock %}
+
+{% block meta_description %}{{ service.description|truncatewords:20 }}{% endblock %}
+
+{% block content %}
+<!-- Hero Start -->
+<div class="container-fluid bg-light page-header py-5 mb-5">
+    <div class="container text-center py-5">
+        <h1 class="display-1 animated slideInLeft">{{ service.name }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center animated slideInLeft mb-0">
+                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:services' %}">Services</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ service.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Hero End -->
+
+<!-- Service Detail Start -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="service-detail">
+                {% if service.image %}
+                <img class="img-fluid w-100 mb-4" src="{{ service.image.url }}" alt="{{ service.name }}">
+                {% endif %}
+                
+                <div class="d-flex align-items-center mb-4">
+                    <div class="d-flex align-items-center me-4">
+                        <i class="fa fa-tag text-primary me-2"></i>
+                        <span class="h4 text-primary mb-0">${{ service.price }}</span>
+                    </div>
+                    {% if service.duration %}
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-clock text-primary me-2"></i>
+                        <span>{{ service.duration }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="service-content">
+                    <h3>Service Description</h3>
+                    <p>{{ service.description }}</p>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{% url 'salon:contact' %}" class="btn btn-primary btn-lg">Book This Service</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="sidebar">
+                <!-- Service Info -->
+                <div class="bg-light p-4 mb-4">
+                    <h5 class="mb-3">Service Information</h5>
+                    <div class="mb-3">
+                        <strong>Category:</strong> {{ service.category.name }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Price:</strong> ${{ service.price }}
+                    </div>
+                    {% if service.duration %}
+                    <div class="mb-3">
+                        <strong>Duration:</strong> {{ service.duration }}
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <strong>Status:</strong> 
+                        {% if service.is_active %}
+                        <span class="text-success">Available</span>
+                        {% else %}
+                        <span class="text-danger">Currently Unavailable</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Related Services -->
+                {% if related_services %}
+                <div class="bg-light p-4 mb-4">
+                    <h5 class="mb-3">Related Services</h5>
+                    {% for related_service in related_services %}
+                    <div class="d-flex mb-3">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                <a href="{% url 'salon:service_detail' related_service.id %}" class="text-decoration-none">{{ related_service.name }}</a>
+                            </h6>
+                            <small class="text-muted">${{ related_service.price }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Contact CTA -->
+                <div class="bg-primary text-white p-4">
+                    <h5 class="text-white mb-3">Book Your Appointment</h5>
+                    <p class="text-white-50">Ready to experience this amazing service? Book your appointment today!</p>
+                    <a href="{% url 'salon:contact' %}" class="btn btn-light">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Service Detail End -->
+{% endblock %}
+

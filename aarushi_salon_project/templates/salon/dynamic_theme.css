@@ -1,0 +1,290 @@
+/* Dynamic Theme CSS - Generated from Admin Settings */
+{% if theme_settings %}
+:root {
+    /* Primary Colors from Admin */
+    --primary-color: {{ theme_settings.primary_color|default:'#8B5A3C' }};
+    --secondary-color: {{ theme_settings.secondary_color|default:'#A67C52' }};
+    --accent-color: {{ theme_settings.accent_color|default:'#D4AF8C' }};
+    --text-dark: {{ theme_settings.text_color|default:'#2c2c2c' }};
+    --text-light: #666;
+    --bg-light: #f8f9fa;
+    --bg-white: {{ theme_settings.background_color|default:'#ffffff' }};
+    --border-color: #e0e0e0;
+    --hover-primary: #6B4430;
+    --hover-secondary: #8B6B47;
+    
+    /* Typography from Admin */
+    --heading-font: '{{ theme_settings.heading_font|default:'Playfair Display' }}', cursive;
+    --body-font: '{{ theme_settings.body_font|default:'Open Sans' }}', sans-serif;
+}
+
+/* Override Bootstrap Primary Color */
+.btn-primary {
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.primary_color }}, {{ theme_settings.secondary_color }}){% else %}{{ theme_settings.primary_color }}{% endif %};
+    border: none;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    {% if theme_settings.enable_shadows %}box-shadow: 0 4px 15px rgba(0,0,0,0.1);{% endif %}
+}
+
+.btn-primary:hover {
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.secondary_color }}, {{ theme_settings.accent_color }}){% else %}{{ theme_settings.secondary_color }}{% endif %};
+    {% if theme_settings.enable_animations %}transform: translateY(-2px);{% endif %}
+    {% if theme_settings.enable_shadows %}box-shadow: 0 8px 25px rgba(0,0,0,0.2);{% endif %}
+}
+
+.btn-outline-primary {
+    color: {{ theme_settings.primary_color }};
+    border-color: {{ theme_settings.primary_color }};
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.primary_color }}, {{ theme_settings.secondary_color }}){% else %}{{ theme_settings.primary_color }}{% endif %};
+    border-color: {{ theme_settings.primary_color }};
+    color: white;
+}
+
+/* Text Colors */
+.text-primary {
+    color: {{ theme_settings.primary_color }} !important;
+}
+
+/* Background Colors */
+.bg-primary {
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.primary_color }}, {{ theme_settings.secondary_color }}){% else %}{{ theme_settings.primary_color }}{% endif %} !important;
+}
+
+/* Typography */
+.font-dancing-script {
+    font-family: var(--heading-font);
+}
+
+body {
+    font-family: var(--body-font);
+    color: {{ theme_settings.text_color }};
+    background-color: {{ theme_settings.background_color }};
+}
+
+/* Navigation */
+.navbar-brand {
+    color: {{ theme_settings.primary_color }} !important;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.navbar-nav .nav-link {
+    color: {{ theme_settings.text_color }} !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: {{ theme_settings.primary_color }} !important;
+}
+
+/* Hero Section */
+.hero-header {
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.primary_color }} 0%, {{ theme_settings.secondary_color }} 50%, {{ theme_settings.accent_color }} 100%){% else %}{{ theme_settings.primary_color }}{% endif %};
+    position: relative;
+    overflow: hidden;
+}
+
+/* Service Cards */
+.service-card {
+    background: {{ theme_settings.background_color }};
+    border-radius: 15px;
+    padding: 2rem;
+    {% if theme_settings.enable_shadows %}box-shadow: 0 10px 30px rgba(0,0,0,0.1);{% endif %}
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.service-card:hover {
+    {% if theme_settings.enable_animations %}transform: translateY(-10px);{% endif %}
+    {% if theme_settings.enable_shadows %}box-shadow: 0 20px 40px rgba(0,0,0,0.2);{% endif %}
+    border-color: {{ theme_settings.primary_color }};
+}
+
+.service-card .service-icon {
+    width: 80px;
+    height: 80px;
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.primary_color }}, {{ theme_settings.secondary_color }}){% else %}{{ theme_settings.primary_color }}{% endif %};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: white;
+    font-size: 2rem;
+}
+
+/* Pricing Cards */
+.pricing-card {
+    background: {{ theme_settings.background_color }};
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    {% if theme_settings.enable_shadows %}box-shadow: 0 15px 35px rgba(0,0,0,0.1);{% endif %}
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.primary_color }}, {{ theme_settings.secondary_color }}){% else %}{{ theme_settings.primary_color }}{% endif %};
+}
+
+.pricing-card:hover {
+    {% if theme_settings.enable_animations %}transform: translateY(-15px);{% endif %}
+    {% if theme_settings.enable_shadows %}box-shadow: 0 25px 50px rgba(0,0,0,0.2);{% endif %}
+    border-color: {{ theme_settings.primary_color }};
+}
+
+.pricing-card .price {
+    font-size: 3rem;
+    font-weight: 700;
+    color: {{ theme_settings.primary_color }};
+    margin: 1rem 0;
+}
+
+/* Team Cards */
+.team-item {
+    border-radius: 20px;
+    overflow: hidden;
+    {% if theme_settings.enable_shadows %}box-shadow: 0 10px 30px rgba(0,0,0,0.1);{% endif %}
+    transition: all 0.3s ease;
+}
+
+.team-item:hover {
+    {% if theme_settings.enable_animations %}transform: translateY(-10px);{% endif %}
+    {% if theme_settings.enable_shadows %}box-shadow: 0 20px 40px rgba(0,0,0,0.2);{% endif %}
+}
+
+.team-overlay {
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.primary_color }}, {{ theme_settings.secondary_color }}){% else %}{{ theme_settings.primary_color }}{% endif %};
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+/* Testimonial Cards */
+.testimonial-card {
+    background: {{ theme_settings.background_color }};
+    border-radius: 20px;
+    padding: 2rem;
+    {% if theme_settings.enable_shadows %}box-shadow: 0 10px 30px rgba(0,0,0,0.1);{% endif %}
+    text-align: center;
+    position: relative;
+    border-left: 5px solid {{ theme_settings.primary_color }};
+}
+
+.testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 4rem;
+    color: {{ theme_settings.primary_color }};
+    font-family: serif;
+}
+
+/* Gallery */
+.gallery-item {
+    border-radius: 15px;
+    overflow: hidden;
+    {% if theme_settings.enable_shadows %}box-shadow: 0 10px 25px rgba(0,0,0,0.1);{% endif %}
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover {
+    {% if theme_settings.enable_animations %}transform: scale(1.05);{% endif %}
+    {% if theme_settings.enable_shadows %}box-shadow: 0 20px 40px rgba(0,0,0,0.2);{% endif %}
+}
+
+/* Form Styling */
+.form-control {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: {{ theme_settings.primary_color }};
+    box-shadow: 0 0 0 0.2rem rgba(0,0,0,0.1);
+}
+
+/* Animations */
+{% if theme_settings.enable_animations %}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+{% endif %}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .hero-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .service-card {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .pricing-card {
+        padding: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .team-item {
+        margin-bottom: 1rem;
+    }
+    
+    .testimonial-card {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.primary_color }}, {{ theme_settings.secondary_color }}){% else %}{{ theme_settings.primary_color }}{% endif %};
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: {% if theme_settings.enable_gradients %}linear-gradient(135deg, {{ theme_settings.secondary_color }}, {{ theme_settings.accent_color }}){% else %}{{ theme_settings.secondary_color }}{% endif %};
+}
+{% endif %}

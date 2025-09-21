@@ -1,0 +1,199 @@
+{% extends 'salon/base_perfectcut.html' %}
+{% load static %}
+
+{% block title %}{{ post.title }} - {{ site_settings.site_name|default:'Aarushi Salon' }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="blog-detail-hero-section" style="min-height: 40vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% if post.featured_image %}{{ post.featured_image.url }}{% else %}{% static 'img/blog-1.jpg' %}{% endif %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">{{ post.title }}</h1>
+                    <p class="hero-subtitle">{{ post.excerpt|default:"Read our latest beauty insights and expert advice" }}</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>{{ post.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-eye"></i>
+                            <span>{{ post.view_count }} views</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-comments"></i>
+                            <span>{{ comments.count }} comments</span>
+                        </div>
+                    </div>
+                    {% if post.get_tags_list %}
+                    <div class="blog-tags mt-3">
+                        {% for tag in post.get_tags_list %}
+                        <span class="badge bg-white text-dark me-1">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Content Section -->
+<section class="blog-detail-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <article class="blog-post">
+                    <div class="blog-content">
+                        {{ post.content|linebreaks }}
+                    </div>
+                    
+                    <!-- Author Info -->
+                    <div class="author-info mt-5 p-4 bg-light rounded">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <div class="author-avatar">
+                                    <img src="{% static 'img/team-1.jpg' %}" alt="{{ post.author }}" class="img-fluid rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <h5 class="mb-1">{{ post.author }}</h5>
+                                <p class="text-muted mb-0">Beauty Expert at Aarushi Salon</p>
+                                <p class="mb-0">With years of experience in beauty and wellness, {{ post.author }} shares expert tips and insights to help you look and feel your best.</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Comments Section -->
+                <div class="comments-section mt-5">
+                    <h4 class="mb-4">{{ comments.count }} Comments</h4>
+                    
+                    {% if comments %}
+                    <div class="comments-list">
+                        {% for comment in comments %}
+                        <div class="comment-item mb-4 p-3 border rounded">
+                            <div class="comment-header d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">{{ comment.name }}</h6>
+                                    <small class="text-muted">{{ comment.created_at|date:"M d, Y \a\t g:i A" }}</small>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                <p class="mb-0">{{ comment.comment|linebreaks }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Comment Form -->
+                    <div class="comment-form mt-5">
+                        <h5 class="mb-4">Leave a Comment</h5>
+                        <form method="post" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Name *</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <div class="invalid-feedback">
+                                        Please provide your name.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid email.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comment" class="form-label">Comment *</label>
+                                <textarea class="form-control" id="comment" name="comment" rows="4" required></textarea>
+                                <div class="invalid-feedback">
+                                    Please provide your comment.
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="blog-sidebar">
+                    <!-- Recent Posts -->
+                    <div class="sidebar-widget mb-5">
+                        <h5 class="widget-title">Recent Posts</h5>
+                        <div class="recent-posts">
+                            {% for recent_post in recent_posts %}
+                            <div class="recent-post-item d-flex mb-3">
+                                <div class="recent-post-image me-3">
+                                    {% if recent_post.featured_image %}
+                                        <img src="{{ recent_post.featured_image.url }}" alt="{{ recent_post.title }}" class="img-fluid rounded" style="width: 80px; height: 60px; object-fit: cover;">
+                                    {% else %}
+                                        <img src="{% static 'img/blog-1.jpg' %}" alt="{{ recent_post.title }}" class="img-fluid rounded" style="width: 80px; height: 60px; object-fit: cover;">
+                                    {% endif %}
+                                </div>
+                                <div class="recent-post-content">
+                                    <h6 class="mb-1"><a href="{% url 'salon:blog_detail' recent_post.slug %}" class="text-decoration-none">{{ recent_post.title }}</a></h6>
+                                    <small class="text-muted">{{ recent_post.created_at|date:"M d, Y" }}</small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Categories -->
+                    <div class="sidebar-widget mb-5">
+                        <h5 class="widget-title">Categories</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="text-decoration-none">Hair Care</a></li>
+                            <li><a href="#" class="text-decoration-none">Skin Care</a></li>
+                            <li><a href="#" class="text-decoration-none">Beauty Tips</a></li>
+                            <li><a href="#" class="text-decoration-none">Wellness</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Contact CTA -->
+                    <div class="sidebar-widget">
+                        <div class="cta-widget p-4 bg-primary text-white rounded">
+                            <h5 class="text-white mb-3">Book Your Appointment</h5>
+                            <p class="mb-3">Ready to experience our beauty services? Book your appointment today!</p>
+                            <a href="{% url 'salon:book_appointment' %}" class="btn btn-light">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %}

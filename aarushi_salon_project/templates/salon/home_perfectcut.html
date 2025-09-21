@@ -1,0 +1,560 @@
+{% extends 'salon/base_perfectcut.html' %}
+{% load static %}
+{% load salon_extras %}
+
+{% block title %}{{ site_settings.site_name|default:'Aarushi Salon' }} - Best Beauty Service{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="home-hero-section" style="min-height: 60vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% static 'img/hero-slider-1.jpg' %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">Welcome to {{ site_settings.site_name|default:'Aarushi Salon' }}!</h1>
+                    <p class="hero-subtitle">Experience the finest beauty and wellness services with our expert team. Your transformation journey begins here.</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Professional Service</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Quality Guaranteed</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Expert Team</span>
+                        </div>
+                    </div>
+                    <div class="hero-cta mt-4">
+                        <a href="{% url 'salon:book_appointment' %}" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-calendar-alt me-2"></i>Book Appointment
+                        </a>
+                        <a href="{% url 'salon:services' %}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-cut me-2"></i>Our Services
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Services</h2>
+            <p>Professional beauty services tailored to your needs</p>
+        </div>
+        
+        {% for category in service_categories|slice:":6" %}
+        <div class="service-category-section mb-5">
+            <div class="category-header">
+                <div class="category-icon">
+                    {% with icon=service_icons|lookup:category.name %}
+                    {% if icon %}
+                        <i class="{{ icon.icon_class }}"></i>
+                    {% else %}
+                        {% if category.name == 'Skin Care' %}
+                            <i class="fas fa-spa"></i>
+                        {% elif category.name == 'Hair Styling' %}
+                            <i class="fas fa-cut"></i>
+                        {% elif category.name == 'Color' %}
+                            <i class="fas fa-palette"></i>
+                        {% elif category.name == 'Waxing' %}
+                            <i class="fas fa-hand-holding-heart"></i>
+                        {% elif category.name == 'Threading' %}
+                            <i class="fas fa-eye"></i>
+                        {% elif category.name == 'Massage' %}
+                            <i class="fas fa-hands"></i>
+                        {% elif category.name == 'Herbal Bleach' %}
+                            <i class="fas fa-leaf"></i>
+                        {% elif category.name == 'Body Scrub' %}
+                            <i class="fas fa-hand-holding-heart"></i>
+                        {% elif category.name == 'Henna Design' %}
+                            <i class="fas fa-paint-brush"></i>
+                        {% elif category.name == 'Make Up' %}
+                            <i class="fas fa-paint-brush"></i>
+                        {% elif category.name == 'Bridal Package' %}
+                            <i class="fas fa-heart"></i>
+                        {% else %}
+                            <i class="fas fa-star"></i>
+                        {% endif %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                <h3 class="category-title">{{ category.name }}</h3>
+                <p class="category-description">{{ category.description }}</p>
+            </div>
+            
+            <div class="row">
+                {% for service in category.services.all|slice:":6" %}
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="service-item">
+                        <div class="service-name">{{ service.name }}</div>
+                        <div class="service-price">${{ service.price }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="category-actions text-center">
+                <a href="{% url 'salon:book_appointment' %}" class="btn btn-primary">
+                    <i class="fas fa-calendar-alt me-2"></i>Book {{ category.name }} Appointment
+                </a>
+                {% if category.services.count > 6 %}
+                <a href="{% url 'salon:services' %}?category={{ category.name|slugify }}" class="btn btn-outline-primary">
+                    <i class="fas fa-eye me-2"></i>View All Services
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'salon:services' %}" class="btn btn-primary">View All Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Section -->
+<section class="blog-section" style="background: var(--bg-light); padding: 80px 0;">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2>Our Blog</h2>
+            <p>Latest beauty tips and trends from our experts</p>
+        </div>
+        
+        <!-- Blog Slider -->
+        <div class="blog-slider-container">
+            <div id="blogCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+                <div class="carousel-inner">
+                    {% for post in blog_posts %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="blog-slide">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-6">
+                                            <div class="blog-image-slider">
+                                                {% if post.featured_image %}
+                                                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="img-fluid">
+                                                {% else %}
+                                                    <img src="{% static 'img/blog-1.jpg' %}" alt="{{ post.title }}" class="img-fluid">
+                                                {% endif %}
+                                                <div class="blog-overlay">
+                                                    <div class="blog-meta-overlay">
+                                                        <span><i class="fa fa-calendar me-1"></i>{{ post.created_at|date:"M d, Y" }}</span>
+                                                        <span><i class="fa fa-user me-1"></i>{{ post.author }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="blog-content-slider">
+                                                {% if post.get_tags_list %}
+                                                <div class="blog-tags-slider">
+                                                    {% for tag in post.get_tags_list|slice:":3" %}
+                                                    <span class="blog-tag-slider">{{ tag }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                                <h3 class="blog-title-slider">{{ post.title }}</h3>
+                                                <p class="blog-excerpt-slider">{{ post.excerpt|default:post.content|truncatewords:30 }}</p>
+                                                <div class="blog-actions">
+                                                    <a href="{% url 'salon:blog_detail' post.slug %}" class="btn btn-primary blog-btn-read">
+                                                        <i class="fas fa-arrow-right me-2"></i>Read More
+                                                    </a>
+                                                    <a href="{% url 'salon:blog' %}" class="btn btn-outline-primary blog-btn-all">
+                                                        <i class="fas fa-th-large me-2"></i>View All Posts
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Carousel Controls -->
+                <button class="carousel-control-prev blog-carousel-prev" type="button" data-bs-target="#blogCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next blog-carousel-next" type="button" data-bs-target="#blogCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators blog-carousel-indicators">
+                    {% for post in blog_posts %}
+                    <button type="button" data-bs-target="#blogCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Blog Post {{ forloop.counter }}"></button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="about-content">
+                    <h2>About Us</h2>
+                    <p>{{ site_content.about_content.content|default:'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English.' }}</p>
+                    <a href="{% url 'salon:about' %}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-image">
+                    {% if site_images.about_bg %}
+                        <img src="{{ site_images.about_bg.image.url }}" alt="About Aarushi Salon">
+                    {% else %}
+                        <img src="{% static 'img/about.jpg' %}" alt="About Aarushi Salon">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="contact-info">
+                    <h2>Contact Us</h2>
+                    <div class="contact-item">
+                        <i class="fa fa-map-marker-alt"></i>
+                        <div>
+                            <h5>Address</h5>
+                            <p>{{ site_settings.address|default:'515 West Ave Norwalk' }}</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa fa-phone"></i>
+                        <div>
+                            <h5>Phone</h5>
+                            <p>{{ site_settings.phone|default:'+01 1234567890' }}</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa fa-envelope"></i>
+                        <div>
+                            <h5>Email</h5>
+                            <p>{{ site_settings.email|default:'demo@gmail.com' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="contact-form">
+                    <h3>Book Your Appointment</h3>
+                    <form id="appointmentForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" name="email" placeholder="Email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="tel" class="form-control" name="phone" placeholder="Phone" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" name="service_id" required>
+                                <option value="">Select Service</option>
+                                {% for category in service_categories %}
+                                    {% for service in category.services.all %}
+                                    <option value="{{ service.id }}">{{ service.name }} - ${{ service.price }}</option>
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="date" class="form-control" name="preferred_date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="time" class="form-control" name="preferred_time" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" name="message" placeholder="Special Request (Optional)" rows="4"></textarea>
+                        </div>
+                        <button class="btn btn-primary w-100" type="submit">Book Now</button>
+                    </form>
+                    <div id="appointmentMessage" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+        {% if testimonials or customer_feedback %}
+        <section class="testimonials-section" style="background: var(--bg-light); padding: 80px 0;">
+            <div class="container">
+                <!-- Display Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show text-center" role="alert" style="margin-bottom: 2rem; border-radius: 10px;">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %} me-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="section-title text-center mb-5">
+                    <h2>What our clients say about us</h2>
+                    <p>Hear from our satisfied customers about their experiences at Aarushi Salon</p>
+                </div>
+                
+                <!-- Feedback Slider -->
+                <div class="feedback-slider-container">
+                    <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                        <div class="carousel-inner">
+                            {% for testimonial in testimonials %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-8 col-md-10">
+                                        <div class="testimonial-slide text-center">
+                                            <div class="testimonial-card" style="background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;">
+                                                <div class="quote-icon mb-3">
+                                                    <i class="fas fa-quote-left" style="font-size: 2rem; color: var(--primary-color);"></i>
+                                                </div>
+                                                <p style="font-style: italic; margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;">"{{ testimonial.content }}"</p>
+                                                <div class="testimonial-rating mb-3" style="color: #ffc107;">
+                                                    {% for i in "12345" %}
+                                                        {% if forloop.counter <= testimonial.rating %}
+                                                            <i class="fa fa-star"></i>
+                                                        {% else %}
+                                                            <i class="fa fa-star-o"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="testimonial-author">
+                                                    <h6 style="margin: 0; font-weight: 600; color: var(--primary-color);">{{ testimonial.client_name }}</h6>
+                                                    <small style="color: var(--text-light);">{{ testimonial.client_profession }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                            {% for feedback in customer_feedback %}
+                            <div class="carousel-item">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-8 col-md-10">
+                                        <div class="testimonial-slide text-center">
+                                            <div class="testimonial-card" style="background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; border-left: 4px solid var(--primary-color);">
+                                                <div class="quote-icon mb-3">
+                                                    <i class="fas fa-quote-left" style="font-size: 2rem; color: var(--primary-color);"></i>
+                                                </div>
+                                                <p style="font-style: italic; margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;">"{{ feedback.feedback }}"</p>
+                                                <div class="testimonial-rating mb-3" style="color: #ffc107;">
+                                                    {% for i in "12345" %}
+                                                        {% if forloop.counter <= feedback.rating %}
+                                                            <i class="fa fa-star"></i>
+                                                        {% else %}
+                                                            <i class="fa fa-star-o"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="testimonial-author">
+                                                    <h6 style="margin: 0; font-weight: 600; color: var(--primary-color);">
+                                                        {% if feedback.is_anonymous %}Anonymous{% else %}{{ feedback.name }}{% endif %}
+                                                    </h6>
+                                                    <small style="color: var(--text-light);">{{ feedback.service_received }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                        
+                        <!-- Carousel Indicators -->
+                        <div class="carousel-indicators">
+                            {% for testimonial in testimonials %}
+                            <button type="button" data-bs-target="#feedbackCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+                            {% endfor %}
+                            {% for feedback in customer_feedback %}
+                            <button type="button" data-bs-target="#feedbackCarousel" data-bs-slide-to="{{ testimonials|length|add:forloop.counter0 }}" aria-label="Slide {{ testimonials|length|add:forloop.counter }}"></button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Share Feedback Button -->
+                <div class="row mt-5">
+                    <div class="col-12 text-center">
+                        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                            <i class="fas fa-star me-2"></i>Share Your Experience
+                        </button>
+                        <p class="mt-3 text-muted">Help others by sharing your experience with our services</p>
+                    </div>
+                </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Feedback Modal -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content feedback-modal-content">
+            <div class="modal-header feedback-modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel">
+                    <i class="fas fa-star me-2"></i>Share Your Experience
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body feedback-modal-body">
+                <p class="text-center mb-4 feedback-modal-description">Help others by sharing your experience with our services</p>
+                
+                <form method="post" action="{% url 'salon:home' %}" id="feedbackForm" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="feedback_submit" value="1">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="modal_name" class="form-label feedback-label">Full Name *</label>
+                            <input type="text" class="form-control feedback-input" id="modal_name" name="name" value="{{ feedback_form_data.name }}" required>
+                            <div class="invalid-feedback">Please provide your full name.</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="modal_email" class="form-label feedback-label">Email Address *</label>
+                            <input type="email" class="form-control feedback-input" id="modal_email" name="email" value="{{ feedback_form_data.email }}" required>
+                            <div class="invalid-feedback">Please provide a valid email address.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="modal_phone" class="form-label feedback-label">Phone Number (Optional)</label>
+                            <input type="text" class="form-control feedback-input" id="modal_phone" name="phone" value="{{ feedback_form_data.phone }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="modal_service_received" class="form-label feedback-label">Service Received *</label>
+                            <input type="text" class="form-control feedback-input" id="modal_service_received" name="service_received" value="{{ feedback_form_data.service_received }}" placeholder="e.g., Hair Styling, Facial Treatment, etc." required>
+                            <div class="invalid-feedback">Please specify the service you received.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="modal_rating" class="form-label feedback-label">Rating *</label>
+                            <select class="form-select feedback-input" id="modal_rating" name="rating" required>
+                                <option value="">Choose your rating...</option>
+                                <option value="1" {% if feedback_form_data.rating == '1' %}selected{% endif %}>⭐ 1 Star</option>
+                                <option value="2" {% if feedback_form_data.rating == '2' %}selected{% endif %}>⭐⭐ 2 Stars</option>
+                                <option value="3" {% if feedback_form_data.rating == '3' %}selected{% endif %}>⭐⭐⭐ 3 Stars</option>
+                                <option value="4" {% if feedback_form_data.rating == '4' %}selected{% endif %}>⭐⭐⭐⭐ 4 Stars</option>
+                                <option value="5" {% if feedback_form_data.rating == '5' %}selected{% endif %}>⭐⭐⭐⭐⭐ 5 Stars</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a rating.</div>
+                        </div>
+                        <div class="col-md-6 mb-3 d-flex align-items-end">
+                            <div class="form-check feedback-checkbox">
+                                <input type="checkbox" class="form-check-input" id="modal_is_anonymous" name="is_anonymous" {% if feedback_form_data.is_anonymous %}checked{% endif %}>
+                                <label class="form-check-label" for="modal_is_anonymous">
+                                    Submit anonymously
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="modal_feedback" class="form-label feedback-label">Your Feedback *</label>
+                        <textarea class="form-control feedback-input" id="modal_feedback" name="feedback" rows="4" placeholder="Tell us about your experience..." required>{{ feedback_form_data.feedback }}</textarea>
+                        <div class="invalid-feedback">Please provide your feedback.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer feedback-modal-footer">
+                <button type="button" class="btn btn-secondary feedback-btn-cancel" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <button type="submit" form="feedbackForm" class="btn btn-primary feedback-btn-submit">
+                    <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Appointment form handling
+document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const messageDiv = document.getElementById('appointmentMessage');
+    
+    fetch('{% url "salon:book_appointment" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            messageDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+            this.reset();
+        } else {
+            messageDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+        }
+    })
+    .catch(error => {
+        messageDiv.innerHTML = '<div class="alert alert-danger">Error booking appointment. Please try again.</div>';
+    });
+});
+</script>
+{% endblock %}

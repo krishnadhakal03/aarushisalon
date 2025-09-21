@@ -1,0 +1,109 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block title %}Testimonials - Aarushi Salon{% endblock %}
+
+{% block meta_description %}Read what our satisfied clients say about Aarushi Salon. Discover why people choose us for their beauty and wellness needs.{% endblock %}
+
+{% block content %}
+<!-- Hero Start -->
+<div class="container-fluid bg-light page-header py-5 mb-5">
+    <div class="container text-center py-5">
+        <h1 class="display-1 animated slideInLeft">Testimonials</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center animated slideInLeft mb-0">
+                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-primary" href="#">Pages</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Testimonials</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Hero End -->
+
+<!-- Testimonial Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="text-center wow fadeIn" data-wow-delay="0.2s">
+            <h1 class="font-dancing-script text-primary">Testimonials</h1>
+            <h1 class="mb-5">What Clients Say!</h1>
+        </div>
+        
+        {% if testimonials %}
+        <div class="owl-carousel testimonial-carousel wow fadeIn" data-wow-delay="0.3s">
+            {% for testimonial in testimonials %}
+            <div class="text-center bg-light p-4">
+                <i class="fa fa-quote-left fa-3x mb-3"></i>
+                <p>{{ testimonial.content }}</p>
+                {% if testimonial.image %}
+                <img class="img-fluid mx-auto border p-1 mb-3" src="{{ testimonial.image.url }}" alt="{{ testimonial.client_name }}">
+                {% else %}
+                <img class="img-fluid mx-auto border p-1 mb-3" src="{% static 'img/testimonial-1.jpg' %}" alt="{{ testimonial.client_name }}">
+                {% endif %}
+                <h4 class="mb-1">{{ testimonial.client_name }}</h4>
+                <span>{{ testimonial.client_profession|default:"Client" }}</span>
+                {% if testimonial.rating %}
+                <div class="mt-2">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= testimonial.rating %}
+                        <i class="fa fa-star text-warning"></i>
+                        {% else %}
+                        <i class="fa fa-star text-muted"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <nav aria-label="Testimonials pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo; First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+                        
+                        <li class="page-item active">
+                            <span class="page-link">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                        </li>
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <h4>Testimonials Coming Soon!</h4>
+                    <p>We're collecting feedback from our amazing clients. Check back soon to read what they have to say about our services!</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- Testimonial End -->
+{% endblock %}
+

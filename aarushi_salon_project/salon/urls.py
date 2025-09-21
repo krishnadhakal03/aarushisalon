@@ -16,4 +16,5 @@ urlpatterns = [
     path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
     path('contact/', views.contact, name='contact'),
     path('book-appointment/', views.book_appointment, name='book_appointment'),
+    path('dynamic-theme.css', views.dynamic_theme_css, name='dynamic_theme_css'),
 ]

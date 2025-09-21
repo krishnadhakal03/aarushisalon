@@ -1,0 +1,208 @@
+{% extends 'salon/base_perfectcut.html' %}
+{% load static %}
+
+{% block title %}Gallery - {{ site_settings.site_name|default:'Aarushi Salon' }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="gallery-hero-section" style="min-height: 40vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% static 'img/hero-bg.jpg' %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">Our Gallery</h1>
+                    <p class="hero-subtitle">See our beautiful work and transformations</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Before & After</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Professional Work</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Quality Results</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section class="gallery-section py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Gallery</h2>
+            <p>Browse through our collection of beautiful transformations</p>
+        </div>
+        
+        <!-- Gallery Filter Buttons - Always Visible -->
+        <div class="gallery-filters">
+            <a href="?category=all" class="gallery-filter-btn {% if current_category == 'all' %}active{% endif %}">All Services</a>
+            <a href="?category=skin-care" class="gallery-filter-btn {% if current_category == 'skin-care' %}active{% endif %}">Skin Care</a>
+            <a href="?category=hair-styling" class="gallery-filter-btn {% if current_category == 'hair-styling' %}active{% endif %}">Hair Styling</a>
+            <a href="?category=make-up" class="gallery-filter-btn {% if current_category == 'make-up' %}active{% endif %}">Make Up</a>
+            <a href="?category=waxing" class="gallery-filter-btn {% if current_category == 'waxing' %}active{% endif %}">Waxing</a>
+            <a href="?category=massage" class="gallery-filter-btn {% if current_category == 'massage' %}active{% endif %}">Massage</a>
+            <a href="?category=threading" class="gallery-filter-btn {% if current_category == 'threading' %}active{% endif %}">Threading</a>
+            <a href="?category=color" class="gallery-filter-btn {% if current_category == 'color' %}active{% endif %}">Color</a>
+            <a href="?category=bridal-package" class="gallery-filter-btn {% if current_category == 'bridal-package' %}active{% endif %}">Bridal</a>
+            <a href="?category=manicure" class="gallery-filter-btn {% if current_category == 'manicure' %}active{% endif %}">Manicure</a>
+            <a href="?category=pedicure" class="gallery-filter-btn {% if current_category == 'pedicure' %}active{% endif %}">Pedicure</a>
+        </div>
+        
+        {% if gallery_images %}
+        <div class="row">
+            {% for image in gallery_images %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="gallery-item {% if image.is_featured %}featured{% endif %}" data-category="{{ image.title|slice:':10' }}">
+                    <div class="gallery-image">
+                        {% if image.image and image.image.url %}
+                            <img src="{{ image.image.url }}" alt="{{ image.title|default:'Gallery Image' }}" class="img-fluid">
+                            <div class="gallery-overlay">
+                                <a href="{{ image.image.url }}" data-lightbox="gallery" class="gallery-link">
+                                    <i class="fas fa-search-plus"></i>
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="gallery-placeholder">
+                                <i class="fas fa-image"></i>
+                                <p>Image Coming Soon</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if image.title %}
+                    <div class="gallery-caption">
+                        <h5>{{ image.title }}</h5>
+                        {% if image.description %}
+                        <p>{{ image.description }}</p>
+                        {% endif %}
+                        <div class="gallery-meta">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>{{ image.created_at|date:"M d, Y" }}
+                                {% if image.is_featured %}
+                                <span class="badge bg-primary ms-2">Featured</span>
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- No Images Found Message -->
+        <div class="no-images-found">
+            <div class="no-images-content">
+                <i class="fas fa-search"></i>
+                <h3>No Images Found</h3>
+                <p>We don't have any images in the <strong>{{ current_category|title }}</strong> category yet.</p>
+                <p>Please try selecting a different category or check back later for new additions!</p>
+                <div class="no-images-actions">
+                    <a href="?category=all" class="btn btn-primary">
+                        <i class="fas fa-th-large me-2"></i>View All Services
+                    </a>
+                    <a href="{% url 'salon:contact' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-envelope me-2"></i>Request Photos
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Gallery pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5" style="background: var(--bg-gradient);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="text-white mb-3">Ready to Create Your Own Transformation?</h3>
+                <p class="text-white mb-0">Book your appointment today and let us help you look and feel your best</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'salon:book_appointment' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-calendar-alt me-2"></i>Book Appointment
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Filter JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth scrolling to gallery section when filter is clicked
+    const filterButtons = document.querySelectorAll('.gallery-filter-btn');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Smooth scroll to gallery section
+            const gallerySection = document.querySelector('.gallery-section');
+            if (gallerySection) {
+                gallerySection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Add loading animation for filter changes
+    const galleryRow = document.querySelector('.gallery-section .row');
+    if (galleryRow) {
+        // Add fade effect when filtering
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                galleryRow.style.opacity = '0.7';
+                galleryRow.style.transition = 'opacity 0.3s ease';
+                
+                setTimeout(() => {
+                    galleryRow.style.opacity = '1';
+                }, 300);
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

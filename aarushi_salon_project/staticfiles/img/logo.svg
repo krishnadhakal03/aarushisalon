@@ -1,0 +1,20 @@
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="30" cy="30" r="25" fill="#8B5A3C" stroke="#A67C52" stroke-width="2"/>
+  
+  <!-- Scissors icon -->
+  <g transform="translate(20, 20)">
+    <!-- Left blade -->
+    <path d="M5 5 L15 15 L12 18 L2 8 Z" fill="white" stroke="white" stroke-width="0.5"/>
+    <!-- Right blade -->
+    <path d="M15 5 L5 15 L8 18 L18 8 Z" fill="white" stroke="white" stroke-width="0.5"/>
+    <!-- Center pivot -->
+    <circle cx="10" cy="10" r="1.5" fill="#8B5A3C"/>
+  </g>
+  
+  <!-- Salon name -->
+  <text x="70" y="25" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#8B5A3C">Aarushi Salon</text>
+  
+  <!-- Tagline -->
+  <text x="70" y="45" font-family="Arial, sans-serif" font-size="12" fill="#A67C52">Beauty & Wellness</text>
+</svg>

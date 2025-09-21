@@ -1,0 +1,468 @@
+/* Aarushi Salon Admin Theme */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Root Variables */
+:root {
+    --admin-primary: #8B5A3C;
+    --admin-primary-light: #A67C52;
+    --admin-secondary: #F5F1ED;
+    --admin-accent: #D4C4B0;
+    --admin-text: #2C2C2C;
+    --admin-text-light: #666666;
+    --admin-border: #E5E5E5;
+    --admin-success: #28a745;
+    --admin-warning: #ffc107;
+    --admin-danger: #dc3545;
+    --admin-info: #17a2b8;
+    --admin-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --admin-radius: 8px;
+}
+
+/* Global Admin Styles */
+body.admin {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #F5F1ED 0%, #E8DDD4 100%);
+    color: var(--admin-text);
+    line-height: 1.6;
+}
+
+/* Header Styling */
+#header {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-light) 100%);
+    box-shadow: var(--admin-shadow);
+    border-bottom: none;
+}
+
+#header h1 {
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+#header h1 a:link, #header h1 a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+#user-tools {
+    color: white;
+}
+
+#user-tools a:link, #user-tools a:visited {
+    color: white;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: var(--admin-radius);
+    transition: all 0.3s ease;
+}
+
+#user-tools a:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-1px);
+}
+
+/* Navigation */
+#nav-global {
+    background: white;
+    border-bottom: 1px solid var(--admin-border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#nav-global a {
+    color: var(--admin-text);
+    font-weight: 500;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+}
+
+#nav-global a:hover {
+    background: var(--admin-secondary);
+    color: var(--admin-primary);
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+    background: white;
+    border-bottom: 1px solid var(--admin-border);
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+}
+
+.breadcrumbs a {
+    color: var(--admin-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.breadcrumbs a:hover {
+    color: var(--admin-primary-light);
+}
+
+/* Main Content */
+#content {
+    background: transparent;
+    padding: 20px;
+}
+
+#content-main {
+    background: white;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+/* Forms */
+.form-row {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #FAFAFA;
+    border-radius: var(--admin-radius);
+    border-left: 4px solid var(--admin-primary);
+}
+
+.form-row:hover {
+    background: #F8F8F8;
+    transform: translateX(2px);
+    transition: all 0.3s ease;
+}
+
+label {
+    font-weight: 600;
+    color: var(--admin-text);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.help {
+    color: var(--admin-text-light);
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Input Fields */
+input[type="text"], input[type="email"], input[type="url"], input[type="password"], 
+input[type="number"], input[type="date"], input[type="time"], 
+textarea, select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="url"]:focus, 
+input[type="password"]:focus, input[type="number"]:focus, input[type="date"]:focus, 
+input[type="time"]:focus, textarea:focus, select:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(139, 90, 60, 0.1);
+    outline: none;
+}
+
+/* Buttons */
+.default, input[type="submit"], input[type="button"], .button, button {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-light) 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--admin-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(139, 90, 60, 0.3);
+}
+
+.default:hover, input[type="submit"]:hover, input[type="button"]:hover, 
+.button:hover, button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(139, 90, 60, 0.4);
+    color: white;
+}
+
+/* Delete Button */
+.deletelink {
+    background: linear-gradient(135deg, var(--admin-danger) 0%, #e74c3c 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.deletelink:hover {
+    background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Tables */
+.results {
+    background: white;
+    border-radius: var(--admin-radius);
+    overflow: hidden;
+    box-shadow: var(--admin-shadow);
+}
+
+thead th {
+    background: var(--admin-primary);
+    color: white;
+    font-weight: 600;
+    padding: 15px;
+    border: none;
+}
+
+tbody tr {
+    transition: all 0.3s ease;
+}
+
+tbody tr:hover {
+    background: var(--admin-secondary);
+    transform: scale(1.01);
+}
+
+tbody td {
+    padding: 15px;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+/* Pagination */
+.paginator {
+    background: white;
+    padding: 20px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    margin-top: 20px;
+}
+
+.paginator a {
+    color: var(--admin-primary);
+    text-decoration: none;
+    padding: 8px 12px;
+    margin: 0 2px;
+    border-radius: var(--admin-radius);
+    transition: all 0.3s ease;
+}
+
+.paginator a:hover {
+    background: var(--admin-primary);
+    color: white;
+}
+
+.paginator .this-page {
+    background: var(--admin-primary);
+    color: white;
+    padding: 8px 12px;
+    margin: 0 2px;
+    border-radius: var(--admin-radius);
+}
+
+/* Filters */
+#changelist-filter {
+    background: white;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    padding: 20px;
+    margin-left: 20px;
+}
+
+#changelist-filter h2 {
+    color: var(--admin-primary);
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--admin-border);
+}
+
+#changelist-filter h3 {
+    color: var(--admin-text);
+    font-size: 1rem;
+    margin: 15px 0 8px 0;
+    font-weight: 600;
+}
+
+#changelist-filter ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#changelist-filter li {
+    margin-bottom: 5px;
+}
+
+#changelist-filter a {
+    color: var(--admin-text-light);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: var(--admin-radius);
+    transition: all 0.3s ease;
+    display: block;
+}
+
+#changelist-filter a:hover {
+    background: var(--admin-secondary);
+    color: var(--admin-primary);
+}
+
+#changelist-filter .selected a {
+    background: var(--admin-primary);
+    color: white;
+}
+
+/* Messages */
+.messagelist {
+    margin: 20px 0;
+}
+
+.messagelist li {
+    padding: 15px 20px;
+    border-radius: var(--admin-radius);
+    margin-bottom: 10px;
+    font-weight: 500;
+    box-shadow: var(--admin-shadow);
+}
+
+.messagelist .success {
+    background: linear-gradient(135deg, var(--admin-success) 0%, #20c997 100%);
+    color: white;
+}
+
+.messagelist .warning {
+    background: linear-gradient(135deg, var(--admin-warning) 0%, #ffca2c 100%);
+    color: #212529;
+}
+
+.messagelist .error {
+    background: linear-gradient(135deg, var(--admin-danger) 0%, #e74c3c 100%);
+    color: white;
+}
+
+/* Object Tools */
+.object-tools {
+    background: white;
+    padding: 15px 20px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    margin-bottom: 20px;
+}
+
+.object-tools li {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.object-tools a {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-light) 100%);
+    color: white;
+    padding: 10px 20px;
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.object-tools a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(139, 90, 60, 0.4);
+    color: white;
+}
+
+/* Help Text Styling */
+.help-text {
+    background: #E8F4FD;
+    border-left: 4px solid var(--admin-info);
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: var(--admin-radius);
+    font-size: 0.9rem;
+    color: var(--admin-text-light);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #content-main {
+        padding: 20px;
+    }
+    
+    .form-row {
+        padding: 10px;
+    }
+    
+    #changelist-filter {
+        margin-left: 0;
+        margin-top: 20px;
+    }
+}
+
+/* Custom Icons */
+.admin-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(139, 90, 60, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--admin-primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Success/Error States */
+.field-success {
+    border-color: var(--admin-success) !important;
+    background: rgba(40, 167, 69, 0.1);
+}
+
+.field-error {
+    border-color: var(--admin-danger) !important;
+    background: rgba(220, 53, 69, 0.1);
+}
+
+/* Tooltips */
+.tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--admin-text);
+    color: white;
+    padding: 8px 12px;
+    border-radius: var(--admin-radius);
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.tooltip:hover::after {
+    opacity: 1;
+}
+

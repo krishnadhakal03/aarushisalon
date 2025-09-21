@@ -1,0 +1,107 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block title %}{{ post.title }} - Aarushi Salon Blog{% endblock %}
+
+{% block meta_description %}{{ post.excerpt|default:post.content|truncatewords:20 }}{% endblock %}
+
+{% block content %}
+<!-- Hero Start -->
+<div class="container-fluid bg-light page-header py-5 mb-5">
+    <div class="container text-center py-5">
+        <h1 class="display-1 animated slideInLeft">{{ post.title }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center animated slideInLeft mb-0">
+                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-primary" href="{% url 'salon:blog' %}">Blog</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ post.title|truncatewords:3 }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Hero End -->
+
+<!-- Blog Detail Start -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="blog-detail">
+                {% if post.featured_image %}
+                <img class="img-fluid w-100 mb-4" src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                {% endif %}
+                
+                <div class="d-flex align-items-center mb-4">
+                    <div class="d-flex align-items-center me-4">
+                        <i class="fa fa-calendar-alt text-primary me-2"></i>
+                        <span>{{ post.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="d-flex align-items-center me-4">
+                        <i class="fa fa-folder-open text-primary me-2"></i>
+                        <span>{{ post.category|default:"Beauty" }}</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-eye text-primary me-2"></i>
+                        <span>{{ post.view_count }} views</span>
+                    </div>
+                </div>
+                
+                {% if post.get_tags_list %}
+                <div class="mb-4">
+                    <strong>Tags:</strong>
+                    {% for tag in post.get_tags_list %}
+                    <span class="badge bg-primary me-1">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="blog-content">
+                    {{ post.content|safe }}
+                </div>
+                
+                {% if post.tags.all %}
+                <div class="mt-4">
+                    <h6>Tags:</h6>
+                    {% for tag in post.tags.all %}
+                    <span class="badge bg-primary me-2">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="sidebar">
+                <!-- Recent Posts -->
+                {% if recent_posts %}
+                <div class="bg-light p-4 mb-4">
+                    <h5 class="mb-3">Recent Posts</h5>
+                    {% for recent_post in recent_posts %}
+                    <div class="d-flex mb-3">
+                        {% if recent_post.featured_image %}
+                        <img class="img-fluid me-3" src="{{ recent_post.featured_image.url }}" alt="{{ recent_post.title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                        {% else %}
+                        <img class="img-fluid me-3" src="{% static 'img/blog-1.jpg' %}" alt="{{ recent_post.title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-1">
+                                <a href="{% url 'salon:blog_detail' recent_post.slug %}" class="text-decoration-none">{{ recent_post.title|truncatewords:5 }}</a>
+                            </h6>
+                            <small class="text-muted">{{ recent_post.created_at|date:"M d, Y" }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Contact CTA -->
+                <div class="bg-primary text-white p-4">
+                    <h5 class="text-white mb-3">Book Your Appointment</h5>
+                    <p class="text-white-50">Ready to experience our amazing services? Book your appointment today!</p>
+                    <a href="{% url 'salon:contact' %}" class="btn btn-light">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Blog Detail End -->
+{% endblock %}

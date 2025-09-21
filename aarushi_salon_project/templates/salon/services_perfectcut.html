@@ -1,0 +1,135 @@
+{% extends 'salon/base_perfectcut.html' %}
+{% load static %}
+{% load salon_extras %}
+
+{% block title %}Services - {{ site_settings.site_name|default:'Aarushi Salon' }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="services-hero-section" style="min-height: 40vh; padding-top: 100px; background: linear-gradient(135deg, rgba(139, 90, 60, 0.9), rgba(166, 124, 82, 0.9)), url('{% static 'img/hero-bg.jpg' %}') center/cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-content text-white">
+                    <h1 class="hero-title">Our Beauty Services</h1>
+                    <p class="hero-subtitle">Professional beauty treatments tailored to your needs</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Expert Stylists</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Premium Products</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Personalized Care</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Services</h2>
+            <p>Discover our comprehensive range of beauty and wellness services</p>
+        </div>
+        
+        {% if service_categories %}
+        {% for category in service_categories %}
+        <div class="service-category-section mb-5">
+            <div class="category-header">
+                <div class="category-icon">
+                    {% with icon=service_icons|lookup:category.name %}
+                    {% if icon %}
+                        <i class="{{ icon.icon_class }}"></i>
+                    {% else %}
+                        {% if category.name == 'Skin Care' %}
+                            <i class="fas fa-spa"></i>
+                        {% elif category.name == 'Hair Styling' %}
+                            <i class="fas fa-cut"></i>
+                        {% elif category.name == 'Color' %}
+                            <i class="fas fa-palette"></i>
+                        {% elif category.name == 'Waxing' %}
+                            <i class="fas fa-hand-holding-heart"></i>
+                        {% elif category.name == 'Threading' %}
+                            <i class="fas fa-eye"></i>
+                        {% elif category.name == 'Massage' %}
+                            <i class="fas fa-hands"></i>
+                        {% elif category.name == 'Herbal Bleach' %}
+                            <i class="fas fa-leaf"></i>
+                        {% elif category.name == 'Body Scrub' %}
+                            <i class="fas fa-hand-holding-heart"></i>
+                        {% elif category.name == 'Henna Design' %}
+                            <i class="fas fa-paint-brush"></i>
+                        {% elif category.name == 'Make Up' %}
+                            <i class="fas fa-paint-brush"></i>
+                        {% elif category.name == 'Bridal Package' %}
+                            <i class="fas fa-heart"></i>
+                        {% else %}
+                            <i class="fas fa-star"></i>
+                        {% endif %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                <h3 class="category-title">{{ category.name }}</h3>
+                <p class="category-description">{{ category.description }}</p>
+            </div>
+            
+            <div class="row">
+                {% for service in category.services.all %}
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="service-item">
+                        <div class="service-name">{{ service.name }}</div>
+                        <div class="service-price">${{ service.price }}</div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-center text-muted">No services available in this category.</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="category-actions text-center">
+                <a href="{% url 'salon:book_appointment' %}" class="btn btn-primary">
+                    <i class="fas fa-calendar-alt me-2"></i>Book {{ category.name }} Appointment
+                </a>
+                <a href="{% url 'salon:pricing' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-tags me-2"></i>View Pricing
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center">
+            <h3>No services available</h3>
+            <p>Please check back later for our service offerings.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5" style="background: var(--bg-gradient);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="text-white mb-3">Ready to Book Your Appointment?</h3>
+                <p class="text-white mb-0">Contact us today to schedule your beauty treatment</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'salon:book_appointment' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-calendar-alt me-2"></i>Book Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

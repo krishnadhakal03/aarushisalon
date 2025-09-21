@@ -498,15 +498,7 @@
 
 /*** Footer ***/
 @media (min-width: 992px) {
-    .footer::after {
-        position: absolute;
-        content: "";
-        width: 1px;
-        height: 100%;
-        top: 0;
-        left: 50%;
-        background: var(--bs-secondary);
-    }
+    /* Footer vertical line removed */
 }
 
 .footer .btn.btn-link {
